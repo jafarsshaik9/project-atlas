@@ -1,0 +1,6 @@
+{
+  "starting_capital_gbp": "1000.00",
+  "planned_risk_per_trade_pct": "0.5",
+  "daily_loss_threshold_pct": "1",
+  "max_concurrent_planned_risk_pct": "1"
+}

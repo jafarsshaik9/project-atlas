@@ -1,0 +1,32 @@
+[
+  {
+    "name": "initial_gbp_1000_research_settings",
+    "settings": {
+      "starting_capital_gbp": "1000.00",
+      "planned_risk_per_trade_pct": "0.5",
+      "daily_loss_threshold_pct": "1",
+      "max_concurrent_planned_risk_pct": "1"
+    },
+    "expected_gbp": {
+      "opening_cash": "1000.00",
+      "planned_risk_per_trade": "5.00",
+      "daily_loss_threshold": "10.00",
+      "max_concurrent_planned_risk": "10.00"
+    }
+  },
+  {
+    "name": "configured_capital_and_percentages_round_down_to_pennies",
+    "settings": {
+      "starting_capital_gbp": "1250.00",
+      "planned_risk_per_trade_pct": "0.25",
+      "daily_loss_threshold_pct": "0.5",
+      "max_concurrent_planned_risk_pct": "0.75"
+    },
+    "expected_gbp": {
+      "opening_cash": "1250.00",
+      "planned_risk_per_trade": "3.12",
+      "daily_loss_threshold": "6.25",
+      "max_concurrent_planned_risk": "9.37"
+    }
+  }
+]

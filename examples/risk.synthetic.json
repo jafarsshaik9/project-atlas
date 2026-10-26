@@ -1,0 +1,10 @@
+{
+  "version": "synthetic-risk-v1",
+  "max_position_pct": "25",
+  "gap_stress_pct": "2",
+  "max_stressed_risk_pct": "2",
+  "quote_max_age_seconds": 60,
+  "leverage_enabled": false,
+  "short_selling_enabled": false,
+  "broker_execution_enabled": false
+}

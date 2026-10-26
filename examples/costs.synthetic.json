@@ -1,0 +1,16 @@
+{
+  "schedule_id": "SYNTHETIC-FEES-v1-NOT-BROKER-RATES",
+  "effective_from": "2026-01-01T00:00:00+00:00",
+  "effective_until": "2027-01-01T00:00:00+00:00",
+  "venues": ["XLON", "XNYS", "XNAS"],
+  "spread_bps": "10",
+  "slippage_bps": "2",
+  "commission_fixed_gbp": "0.05",
+  "commission_bps": "0",
+  "fx_bps": "5",
+  "entry_tax_bps": "0",
+  "exit_tax_bps": "0",
+  "other_fixed_gbp": "0",
+  "stress_multiplier": "2",
+  "synthetic": true
+}

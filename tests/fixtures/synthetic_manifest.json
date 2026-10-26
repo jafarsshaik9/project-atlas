@@ -1,0 +1,322 @@
+[
+  {
+    "name": "rising",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "3cf50e70caea2318e5f8e498c9f6dd94063c325edb24f1cd7aa759d84a09a9c1",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"rising\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "falling",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "56c0b5607f2d65cf5010f078997856a75821f8e82a23e340e9b7bc7c7e5be2f7",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"falling\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "sideways",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "1990e9719d8c5cb551c7de76395ee0a7a67b333f1ae78b91f96d72de7b99071d",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"sideways\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "volatile",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "3ad5933f0aa9d96c982e56ed1750e39bb4ae9257ec3482952978183b0f55ca7c",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"volatile\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "low_liquidity",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "3f06207442f8b9a55b1ec2cd8d9e977d60f1412cb8a355a13edb49ee7fb557d6",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"low_liquidity\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "orb",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "73e70678a73326078377c21dbee8b76ac072056f1c6766b241546d61a17f08b8",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"orb\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "false_breakout",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "03f319373ea9c653d3c4a3e0308b5802ada2930b36acac764249b9d1eb10cb6a",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"false_breakout\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "missing",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "a44d2564609d99c1879b751542bc004fafab9f3581e4fa8872a85d257de3afa6",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"missing\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "duplicate",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "d7de00fc29d81703e07970c405288baf02fe5dec6ff6231059819176977b76f0",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"duplicate\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "incomplete",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "3873e9591c171632a97c64466c7f63aa448d3d5fcbfc6d10337a42f0b771b6f8",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"incomplete\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "stale_quote",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "f707da28819ec9ab0c054c03c14b11e7433954647a5ad33fbef3244500f9132e",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"stale_quote\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "gap",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "f71f26e500505c3815ab80a660a96d045ef55219e2360af0b76e0cc10d39dd9a",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"gap\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "ambiguous",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "735ebebf55271e83286395201e9a99a94c777187b8c7aa522da8308b15a1a8b6",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"ambiguous\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "time_exit",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "2ea0b1800e780f7825f0cc31e1318edb86feb4b5888fc8fca98b40aba52dcaf3",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"time_exit\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "no_fill",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "704beabcf878b7fbe58a07cf322bdecbe46f3d23ad5ccbd82d28fa9d84d52acd",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"no_fill\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "partial_fill",
+    "instrument": "SYNTH-XLON-EQUITY-001",
+    "checksum": "a7da88111a8a5569d9b86a4175d7b7244efdd699821e35a72f82979b702a3b59",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"partial_fill\", \"seed\": 0, \"venue\": \"XLON\"}"
+    }
+  },
+  {
+    "name": "rising",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "adfa1c972a207b35f0ad64468b114148fc5e5f800330f44e24b4f9fc4c91efdb",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"rising\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "falling",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "7bd1d0f33bcb5e55db2d099f12378eeddd34a3c13c2688bf1dcf0975c1400d1c",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"falling\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "sideways",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "1b4f744e034c1c86b570f5829f97ea671f8e7b3c464295770bb11866ce10abae",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"sideways\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "volatile",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "3291d32b53a84d312c1524e1ec206ef63c1fae32a424ff44f7fdafc67a5f6f48",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"volatile\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "low_liquidity",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "73ce4c9014905376f259475f70e07e27acf5d04c71f250040d023b48f6bc286e",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"low_liquidity\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "orb",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "4ac140d2f1cab581b72dad4f2e294cc089c71aeec223ef97fd2358e193909845",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"orb\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "false_breakout",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "40f08567e9d167add526a5267f3213c0e01664ce02fbe5e11af41f7f74cb09a4",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"false_breakout\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "missing",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "1f0c0ed681a1a637a0376764b164f2d58a0806553da82f35eb0d2d3459f93a60",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"missing\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "duplicate",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "7c901124cd3dcad476b2d51486913aa74b96cf969baaf258cdb54ef2f1ab01af",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"duplicate\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "incomplete",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "8b82e8699d39e7de68450e4a4611491fc7e925698217c63bc896284fa9d82de0",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"incomplete\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "stale_quote",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "66c2b8ba0e24acecc5c306f7ae60f16db8f7852a13f7c933a989ba456332c264",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"stale_quote\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "gap",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "23323b04b66cce62d79253ec91ec5e70cc0be021cd56b7603fcc0835fbd62264",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"gap\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "ambiguous",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "370a42e44eac5a4cb6a1cf981706ba87b43f7fabc8c69f1d344d73e569be1a86",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"ambiguous\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "time_exit",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "17cbaa8323ceb67d8f7e8bd0d1b800922b92bb6431c4addc07825c5a09f75c08",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"time_exit\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "no_fill",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "e5a9c6f463cd0991eaf6626913fb705e799ea3bccbc7b5112e9dc91324c9d29c",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"no_fill\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  },
+  {
+    "name": "partial_fill",
+    "instrument": "SYNTH-XNAS-EQUITY-001",
+    "checksum": "12dff894f8db4a8e6e2e8ee146ae28da43af212a4e02d8355f02aee63a5cbaee",
+    "provenance": {
+      "label": "SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE",
+      "generator": "atlas.synthetic.v1",
+      "parameters": "{\"day\": \"2026-10-26\", \"randomness\": \"none\", \"scenario\": \"partial_fill\", \"seed\": 0, \"venue\": \"XNAS\"}"
+    }
+  }
+]
