@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+from pathlib import Path
 
 from atlas.config import AtlasError, Settings
 
@@ -20,6 +21,7 @@ def main(argv: list[str] | None = None) -> int:
             "broker-check",
             "research-check",
             "synthetic-backtest",
+            "historical-backtest",
             "dashboard",
             "dashboard-check",
             "dashboard-setup",
@@ -41,6 +43,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cost-config")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--history-db")
+    parser.add_argument("--historical-config", type=Path)
+    parser.add_argument("--historical-db", type=Path)
+    parser.add_argument("--allow-artificial-historical", action="store_true")
     parser.add_argument("--no-persist", action="store_true")
     parser.add_argument("--new-run", action="store_true")
     parser.add_argument("--notify-synthetic", action="store_true")
@@ -61,6 +66,14 @@ def main(argv: list[str] | None = None) -> int:
             from atlas.research_cli import run
 
             return run(args)
+        if args.command == "historical-backtest":
+            if args.historical_config is None or args.historical_db is None:
+                raise AtlasError(
+                    "historical-backtest requires --historical-config and --historical-db."
+                )
+            from atlas.historical_backtest_cli import run as run_historical
+
+            return run_historical(args)
         if args.command not in ("health", "broker-check"):
             from atlas.dashboard_cli import run as run_dashboard_command
 

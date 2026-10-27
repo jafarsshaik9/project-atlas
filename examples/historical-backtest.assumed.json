@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "dataset_id": "replace_with_accepted_dataset_sha256",
+  "availability": {
+    "mode": "ASSUMED",
+    "delay_seconds": 60
+  },
+  "instrument": {
+    "tick_size": "0.01",
+    "quantity_step": "1",
+    "minimum_quantity": "1"
+  },
+  "execution": {
+    "spread_bps": "5",
+    "slippage_bps": "5",
+    "commission_fixed_gbp": "0.00",
+    "commission_bps": "0",
+    "fx_bps": "15",
+    "entry_tax_bps": "0",
+    "exit_tax_bps": "0",
+    "other_fixed_gbp": "0.00",
+    "max_volume_participation_pct": "1",
+    "stress_multiplier": "2"
+  },
+  "fx": {
+    "gbp_per_usd": "0.80",
+    "event_time": "2026-10-26T13:30:00+00:00",
+    "available_time": "2026-10-26T13:30:00+00:00",
+    "source": "EXPLICIT_RESEARCH_ASSUMPTION_NOT_A_VERIFIED_HISTORICAL_FX_RATE",
+    "point_in_time_verified": false
+  },
+  "evaluation": {
+    "role": "OUT_OF_SAMPLE",
+    "parameter_selection_cutoff": "2026-10-25T23:59:59+00:00"
+  },
+  "orb": {
+    "opening_range_minutes": 15,
+    "candle_minutes": 5,
+    "target_r": "2",
+    "signal_lifetime_minutes": 5,
+    "exit_buffer_minutes": 5,
+    "minimum_bar_volume": "100"
+  },
+  "research": {
+    "starting_capital_gbp": "1000.00",
+    "planned_risk_per_trade_pct": "0.5",
+    "daily_loss_threshold_pct": "1",
+    "max_concurrent_planned_risk_pct": "1"
+  }
+}

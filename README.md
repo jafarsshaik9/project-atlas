@@ -1,5 +1,31 @@
 # Project Atlas — Offline Quantitative Research
 
+## Phase 3B: deterministic historical backtesting
+
+Atlas can now replay an accepted Phase 3A US-equity dataset through the existing
+ORB strategy, independent risk engine, cost engine and GBP virtual ledger. It never
+modifies the source dataset and has no broker, provider-network or notification path.
+
+UNKNOWN source publication availability remains invisible in `VERIFIED` mode. The
+separate `ASSUMED` mode applies a declared bar-end delay only inside the replay and
+labels every result exploratory and not point-in-time verified. It does not rewrite
+stored timestamps or claim a provider publication time.
+
+```powershell
+Copy-Item examples/historical-backtest.assumed.json local/historical-backtest.json
+# Edit only the local copy: set its accepted dataset SHA and explicit FX/cost assumptions.
+.\.venv\Scripts\python.exe -m atlas.main historical-backtest `
+  --historical-config local/historical-backtest.json `
+  --historical-db local/market-data/massive-pilot/historical.sqlite3
+```
+
+The initial engine is one recorded US session per run. Orders are modeled at a
+strictly later one-minute bar open, with executable spread, configured slippage and
+fees, and a capacity ceiling derived from a configured fraction of reported volume.
+Reported volume is not claimed to be order-book liquidity. Read the
+[Phase 3B architecture](docs/phase3b_architecture.md) and
+[implementation report](docs/phase3b_report.md) before interpreting any output.
+
 ## Phase 3A-M: Massive US historical data
 
 The dedicated adapter uses explicit USD common-stock reference evidence, exact
@@ -59,8 +85,8 @@ verify contents. Read commands refuse missing databases without initializing the
 Inspect/validate `--json` stdout is one JSON document, including failure reports.
 
 Unknown original availability stays UNKNOWN and is excluded from strict consumer
-selection. No historical data flows into strategies, portfolio balances, research
-history, Telegram or dashboard startup. No Phase 3B/3C or broker execution is added.
+selection. Phase 3B consumes data only through an explicit offline command; dashboard
+startup, Telegram and broker code remain isolated. No Phase 3C or broker execution is added.
 Read [architecture](docs/phase3a_architecture.md), [provider comparison and approval
 steps](docs/market_data_providers.md), [quality/storage/backup policy](docs/historical_data_quality.md)
 and [acceptance evidence](docs/phase3a_acceptance_report.md).

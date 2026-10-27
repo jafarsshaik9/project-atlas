@@ -84,12 +84,14 @@ def run_backtest(
     dataset: SyntheticDataset,
     settings: ResearchSettings | None = None,
     *,
+    label: str = LABEL,
     costs: CostEngine | None = None,
     orb: ORBConfig | None = None,
     policy: RiskPolicy | None = None,
     calendar: SessionCalendar | None = None,
     clock: ReplayClock | None = None,
     observer: Callable[[str, PortfolioSnapshot, object, bool], None] | None = None,
+    ignore_predecision_quotes: bool = False,
 ) -> BacktestReport:
     """At most one hypothesis per instrument/session, no automatic retry of a rejected intent."""
     settings = settings if settings is not None else ResearchSettings()
@@ -258,9 +260,8 @@ def run_backtest(
                     else:
                         quality["INSUFFICIENT_TIME_EXIT_LIQUIDITY"] += 1
             for intent_id, signal in list(pending.items()):
-                if (
-                    quote.event_time <= signal.decision_time
-                    and quote.visible_time == quote.event_time
+                if quote.event_time <= signal.decision_time and (
+                    ignore_predecision_quotes or quote.visible_time == quote.event_time
                 ):
                     continue
                 qty = risk.size(signal, inst, quote, dataset.fx, now)
@@ -370,6 +371,7 @@ def run_backtest(
                 "next-quote-one-attempt; quote-stop-first-at-ties; latched-stop; "
                 "gap-at-worse-price; v2"
             ),
+            "ignore_predecision_quotes": ignore_predecision_quotes,
             "account_base_currency": "GBP",
         }
     )
@@ -379,7 +381,7 @@ def run_backtest(
     exits = [fill for fill in ledger.history if fill.side == "sell"]
     net = final.equity_gbp - settings.starting_capital_gbp
     return BacktestReport(
-        LABEL,
+        label,
         settings.starting_capital_gbp,
         final.equity_gbp,
         len(identified),
