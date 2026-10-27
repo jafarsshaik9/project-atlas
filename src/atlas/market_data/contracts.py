@@ -307,7 +307,7 @@ class ProviderDescriptor(Contract):
 class RawPage(Contract):
     body: dict
     fetched_at: datetime
-    next_cursor: str | None = Field(default=None, max_length=100)
+    next_cursor: str | None = Field(default=None, max_length=8192)
     wire_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     http_status: int = 200
     normalization_order: Literal["ascending", "descending"]

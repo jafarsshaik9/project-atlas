@@ -1,5 +1,23 @@
 # Project Atlas — Offline Quantitative Research
 
+## Phase 3A-M: Massive US historical data
+
+The dedicated adapter uses explicit USD common-stock reference evidence, exact
+minute normalization, secure pagination and a shared conservative persistent quota.
+Original publication availability remains UNKNOWN. No historical observations feed
+trading, portfolio balances or Telegram. Massive is inactive unless explicitly
+invoked; no subscription or account-setting change is automated.
+
+```powershell
+.\.venv\Scripts\python.exe -m atlas.main market-data providers
+.\.venv\Scripts\python.exe -m atlas.main market-data massive-pilot --help
+```
+
+The initial owner-authorised AAPL pilot is limited to four lifetime authenticated
+attempts and stops on failure. Further requests need separate approval. Read
+[setup, quota and recovery](docs/massive_provider.md) and
+[actual pilot/acceptance results](docs/phase3a_massive_acceptance_report.md).
+
 ## Phase 3A: historical data infrastructure
 
 Isolated historical contracts, maintained cash-equity calendars, quality/quarantine,
@@ -284,7 +302,8 @@ contents. No clipboard contents are written to a file.
 
 If execution policy blocks the script, paste its reviewed contents into your local
 PowerShell session; no system policy change is necessary. `.env.example` documents
-variable names only. Atlas deliberately does not load `.env` files. `.env`, venv,
+variable names only for broker/research/Telegram commands. Only explicitly authorised
+Massive requests may lazily select MASSIVE_API_KEY from local `.env`. `.env`, venv,
 logs, local configuration and editor files are ignored by Git.
 
 With environment variables already set locally:

@@ -55,6 +55,9 @@ def download(
     if cached:
         store.inspect(cached)
         return cached, job_id, True
+    bind_heartbeat = getattr(provider, "set_heartbeat", None)
+    if bind_heartbeat:
+        bind_heartbeat(lambda: store.heartbeat(job_id, owner))
     try:
         pages = list(store.pages(job_id))
         cursor = store.job(job_id)["cursor"]
@@ -116,3 +119,6 @@ def download(
         )
         failure.resume_job_id = job_id
         raise failure from None
+    finally:
+        if bind_heartbeat:
+            bind_heartbeat(None)

@@ -189,3 +189,18 @@ interrupted command reports it on stderr. Config-file requests require the same
 approval, local credentials and `--allow-network`. Resuming never relaxes access
 checks. Completed compatible resumption is idempotent; policy/code changes can
 require a fresh import. Existing schemas/manifests are not automatically rewritten.
+
+## Massive US data
+
+Phase 3A-M adds Massive-only evidence validation without changing earlier provider
+normalization. Dated reference binds complete canonical identity and USD units;
+aggregate ticker, counts and response adjustment must match. These are rechecked
+at publication and inspection. Epoch milliseconds remain the original provider
+timestamp; availability stays UNKNOWN. Overlapping/backwards page sequences are
+quarantined even if sorting could hide the problem. No gap filling, FX conversion,
+dividend adjustment or historical strategy dispatch is performed.
+
+RawPage continuation bounds are now 8192 characters. Massive additionally restricts
+origin, exact endpoint and query fields. Credential-bearing continuations are not
+stored or sent. Existing request/job/source-chain/checksum protections remain.
+See [Massive operations and limitations](massive_provider.md).

@@ -15,6 +15,8 @@ from atlas.config import AtlasError
 from atlas.domain import Venue
 from atlas.market_data.calendars import HistoricalCalendar
 from atlas.market_data.contracts import CorporateAction, DownloadRequest, canonical
+from atlas.market_data.massive import MassiveProvider
+from atlas.market_data.massive_limits import MassiveQuota
 from atlas.market_data.providers import (
     FixtureProvider,
     ProviderError,
@@ -67,7 +69,9 @@ def parser():
     commands.add_parser("providers", help="List capabilities; no network")
     commands.add_parser("instruments", help="List artificial instruments; no network")
     fetch = commands.add_parser("download", help="Default: original artificial offline fixture")
-    fetch.add_argument("--provider", choices=("fixture-v1", "twelve-data"), default="fixture-v1")
+    fetch.add_argument(
+        "--provider", choices=("fixture-v1", "twelve-data", "massive"), default="fixture-v1"
+    )
     fetch.add_argument(
         "--config", type=Path, help="Explicit instrument/request JSON; never credentials"
     )
@@ -89,6 +93,13 @@ def parser():
     coverage.add_argument("--offset", type=int, default=0)
     backup = commands.add_parser("backup", help="SQLite online backup to a new private file")
     backup.add_argument("destination", type=Path)
+    pilot = commands.add_parser(
+        "massive-pilot",
+        json_supported=True,
+        help="Explicit AAPL initial pilot; <=4 lifetime HTTP attempts",
+    )
+    pilot.add_argument("--allow-network", action="store_true")
+    pilot.add_argument("--json", action="store_true")
     for sub in (
         fetch,
         *[commands.choices[c] for c in ("validate", "inspect", "coverage", "backup")],
@@ -153,7 +164,7 @@ def perform_download(args):
         )
     # Gate external access before creating any database/job or reading the local key.
     access = config.get("external_access", {})
-    if args.provider == "twelve-data" and (
+    if args.provider in ("twelve-data", "massive") and (
         not args.allow_network
         or not isinstance(access, dict)
         or access.get("access_confirmed") is not True
@@ -164,6 +175,10 @@ def perform_download(args):
     store = HistoricalStore(args.db) if args.db else HistoricalStore()
     if args.provider == "fixture-v1":
         provider = FixtureProvider(calendar, page_size=5000)
+    elif args.provider == "massive":
+        provider = MassiveProvider(
+            MassiveQuota(), allow_network=True, access_reference=access["license_reference"]
+        )
     else:
 
         def before_request():
@@ -213,7 +228,11 @@ def main(argv=None):
         if not json_mode:
             print("HISTORICAL MARKET DATA | EXECUTION: NONE | NOTIFICATIONS: NONE")
         if args.command == "providers":
-            for descriptor in (FixtureProvider.descriptor, TwelveDataProvider.descriptor):
+            for descriptor in (
+                FixtureProvider.descriptor,
+                TwelveDataProvider.descriptor,
+                MassiveProvider.descriptor,
+            ):
                 print(canonical(descriptor.model_dump(mode="json")))
             return 0
         if args.command == "instruments":
@@ -224,6 +243,12 @@ def main(argv=None):
             return 0
         if args.command == "download":
             return perform_download(args)
+        if args.command == "massive-pilot":
+            from atlas.market_data.massive_pilot import run_pilot
+
+            report = run_pilot(authorized=args.allow_network)
+            print(canonical(report))
+            return int(report["status"] != "COMPLETED")
         store = HistoricalStore(args.db, read_only=True)
         if args.command == "coverage":
             manifests, total = store.coverage(limit=args.limit, offset=args.offset)

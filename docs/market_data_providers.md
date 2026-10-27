@@ -1,16 +1,18 @@
 # Historical provider selection and access
 
-Research checked 27 October 2026 against public primary documentation. No provider
-account exists for Atlas. No account was created, licence accepted, subscription
-purchased, API credential obtained, authenticated request sent or actual market
-dataset downloaded. Public documentation browsing is separate from data access.
+Original Phase 3A research checked 27 October 2026 against public primary documentation,
+before a provider account existed. Phase 3A-M now adds a Massive adapter and the
+owner-authorised Basic connectivity pilot; see its
+[current evidence](phase3a_massive_acceptance_report.md) and
+[provider guide](massive_provider.md). Atlas creates no accounts, buys no subscriptions
+and accepts no licences. The original comparison below predates the pilot.
 Prices below are advertised USD prices, not quotes or a guarantee of entitlements.
 
 ## Comparison and recommendation
 
 | Source | US minute history | UK LSE minute history | Cost and limits | Suitability / verification |
 | --- | --- | --- | --- | --- |
-| Massive, formerly Polygon | Basic: rolling 2 years; Starter: 5; Developer: 10; Advanced: archive back to 2003-09-10 | US stock product does not establish XLON coverage | Basic $0, 5 calls/min, EOD-delivered minute aggregates; Starter $29/month; Developer $79; Advanced $199. Paid plans advertise unlimited calls, subject to service policies | Best initial **candidate** for low-cost full-market US historical bars; individual/non-professional terms must fit use. Not implemented or account-tested |
+| Massive, formerly Polygon | Basic: rolling 2 years; Starter: 5; Developer: 10; Advanced: archive back to 2003-09-10 | US stock product does not establish XLON coverage | Basic $0, 5 calls/min, EOD-delivered minute aggregates; Starter $29/month; Developer $79; Advanced $199. Paid plans advertise unlimited calls, subject to service policies | Phase 3A-M adapter implemented; reviewed pilot verified 390 AAPL USD minute bars for 2026-10-26 with two HTTP 200 requests. Broader depth, coverage and rights remain unverified |
 | Twelve Data | Documented 1-minute API; earliest possible minute date 2020-02-10, actual symbol/plan depth varies | Exchange table currently labels XLON **EOD**. BCXE is a different venue and cannot stand in for XLON | Basic free: 8 credits/min, 800/day; time_series costs 1 credit/symbol. Current displayed individual paid tiers $79/$229/$999 monthly; credit selections/prices can differ | US-only REST adapter implemented and HTTP-mocked. Account access, historical completeness, volume basis and rights unverified. UK minute access explicitly blocked |
 | Alpaca | Historical API advertises history since 2016; feed/plan entitlement matters | No XLON coverage established | Basic free 200 calls/min; Plus $99/month, 10,000/min per current table | IEX-only observations are not consolidated-market volume. Older SIP history rules and account entitlements require verification. Not implemented |
 | Alpha Vantage | TIME_SERIES_INTRADAY is premium, supports 1-minute and advertises 20+ years | Generic global/EOD symbol support does not verify LSE minute depth | Free 25 calls/day does not establish premium intraday rights. Paid price/rate selected in premium form; exact required tier not verified | Do not select based on generic UK ticker support; obtain XLON sample, units, depth and cost first. Not implemented |
@@ -50,9 +52,18 @@ retention rights remain blockers. Do not substitute 5-minute/EOD or another venu
 
 The recommended combination is therefore **Massive US evaluation + separately
 verified LSE source**. This is a research recommendation, not a purchase or an
-account-tested integration. Only the adapters listed below are implemented.
+account-tested integration. Phase 3A-M now adds Massive to the original adapter list;
+real-provider verification is limited to the recorded controlled pilot outcome.
 
 ## Implemented adapters
+
+`massive`: dated US common-stock identity, USD minute aggregates, explicit split
+policy, secure long continuations and shared persistent quota. The controlled
+pilot first stopped locally with zero attempts, then succeeded after the owner
+saved configuration and approved a reviewed retry: two HTTP 200 requests and 390
+complete AAPL USD bars on 2026-10-26. Broader compatibility remains unverified.
+See [setup and recovery](massive_provider.md); no additional request is authorised
+by this status entry.
 
 `fixture-v1`: fully offline, original artificial one-minute data for XLON GBP/GBX,
 XNYS USD and XNAS USD. No universe is inferred from ticker strings.

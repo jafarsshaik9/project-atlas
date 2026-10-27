@@ -55,6 +55,7 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
     mapping = request.instrument.mapping(request.provider, request.start, request.end)
     bars = []
     raw_count = 0
+    last_massive_start = None
     for page in pages:
         body = page.body
         meta, rows = body.get("meta"), body.get("values")
@@ -62,6 +63,22 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
             issue("MALFORMED_RESPONSE", "Required market metadata/row collection/status is absent.")
             continue
         valid_meta = True
+        if request.provider == "massive":
+            from atlas.market_data.massive import verify_evidence
+
+            try:
+                if (
+                    page.original_availability != "unknown"
+                    or page.normalization_order != "ascending"
+                ):
+                    raise ValueError("Massive page provenance policy mismatch")
+                verify_evidence(request, body)
+            except (KeyError, ValueError, TypeError):
+                issue(
+                    "MASSIVE_PROVENANCE_MISMATCH",
+                    "Dated reference identity or aggregate adjustment evidence is invalid.",
+                )
+                valid_meta = False
         for key, expected in (
             ("symbol", mapping.symbol),
             ("mic_code", mapping.mic.value),
@@ -91,7 +108,12 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                 original = row["datetime"]
                 if not isinstance(original, str):
                     raise ValueError
-                if request.provider == "twelve-data":
+                if request.provider == "massive":
+                    if not original.isascii() or not original.isdigit() or len(original) > 15:
+                        raise ValueError
+                    start = datetime(1970, 1, 1, tzinfo=UTC) + timedelta(milliseconds=int(original))
+                    timestamp_zone = "UTC (provider Unix epoch milliseconds)"
+                elif request.provider == "twelve-data":
                     start = datetime.strptime(original, "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
                     timestamp_zone = "UTC (explicit provider request parameter)"
                 else:
@@ -99,7 +121,7 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     if start.tzinfo is None or start.utcoffset() != timedelta(0):
                         raise ValueError
                     timestamp_zone = "UTC (explicit fixture timestamp)"
-            except (KeyError, ValueError, TypeError):
+            except (KeyError, ValueError, TypeError, OverflowError):
                 issue(
                     "INVALID_TIMESTAMP",
                     "Missing, malformed or ambiguous provider bar-start timestamp.",
@@ -113,6 +135,13 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     "SOURCE_ORDER_VIOLATION",
                     "Page order contradicts the provider's documented convention.",
                 )
+            if request.provider == "massive":
+                if last_massive_start is not None and start <= last_massive_start:
+                    issue(
+                        "SOURCE_PAGE_ORDER_VIOLATION",
+                        "Massive page sequence overlaps or moves backwards; no repair.",
+                    )
+                last_massive_start = start
             previous = start
             try:
                 values = {}

@@ -1,0 +1,17 @@
+{
+  "external_access": {"access_confirmed": false, "license_reference": "replace_only_after_separate_download_approval"},
+  "request": {
+    "provider": "massive",
+    "instrument": {
+      "instrument_id": "MASSIVE-BBG000FAKE01", "venue": "XNAS",
+      "trading_currency": "USD", "quote_unit": "USD",
+      "instrument_timezone": "America/New_York", "exchange_timezone": "America/New_York",
+      "identifiers": [["composite_figi", "BBG000FAKE01"]],
+      "metadata_evidence": "Massive dated ticker reference 2026-10-26",
+      "mappings": [{"provider": "massive", "symbol": "FAKE", "mic": "XNAS", "currency_code": "USD", "effective_from": "2026-10-26T04:00:00Z", "effective_to": "2026-10-27T04:00:00Z", "metadata_source": "Massive v3 reference/tickers; as-of 2026-10-26"}]
+    },
+    "start": "2026-10-26T13:30:00Z", "end": "2026-10-26T20:00:00Z",
+    "resolution": "1min", "adjustment": "UNADJUSTED", "assumed_delay_seconds": null
+  },
+  "actions": [], "action_coverage": "UNKNOWN"
+}
