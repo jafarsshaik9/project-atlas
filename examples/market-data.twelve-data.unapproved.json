@@ -1,0 +1,16 @@
+{
+  "external_access": {"access_confirmed": false, "license_reference": "replace_only_after_explicit_account_and_licence_approval"},
+  "request": {
+    "provider": "twelve-data",
+    "instrument": {
+      "instrument_id": "FICTIONAL-XNAS-EXAMPLE", "venue": "XNAS",
+      "trading_currency": "USD", "quote_unit": "USD",
+      "instrument_timezone": "America/New_York", "exchange_timezone": "America/New_York",
+      "metadata_evidence": "FICTIONAL EXAMPLE ONLY; replace with verified provider metadata before use",
+      "mappings": [{"provider": "twelve-data", "symbol": "FICTIONAL", "mic": "XNAS", "currency_code": "USD", "effective_from": "2024-01-01T00:00:00Z", "metadata_source": "FICTIONAL EXAMPLE ONLY"}]
+    },
+    "start": "2024-10-28T13:30:00Z", "end": "2024-10-28T13:40:00Z",
+    "resolution": "1min", "adjustment": "UNADJUSTED", "assumed_delay_seconds": null
+  },
+  "actions": [], "action_coverage": "UNKNOWN"
+}

@@ -1,5 +1,52 @@
 # Project Atlas — Offline Quantitative Research
 
+## Phase 3A: historical data infrastructure
+
+Isolated historical contracts, maintained cash-equity calendars, quality/quarantine,
+resumable local storage and provider commands are implemented. **No real market
+data has been downloaded.** The original artificial provider works offline for
+LSE GBP/GBX and NYSE/NASDAQ USD one-minute bars. A US-only Twelve Data adapter is
+HTTP-mocked; external access/licensing remains blocked without a separately
+approved account. LSE one-minute vendor access is unverified.
+
+```powershell
+.\.venv\Scripts\python.exe -m atlas.main market-data --help
+.\.venv\Scripts\python.exe -m atlas.main market-data providers
+.\.venv\Scripts\python.exe -m atlas.main market-data instruments
+.\.venv\Scripts\python.exe -m atlas.main market-data download
+.\.venv\Scripts\python.exe -m atlas.main market-data download --venue XNAS --minutes 10
+.\.venv\Scripts\python.exe -m atlas.main market-data download --config examples/market-data.fixture.json
+.\.venv\Scripts\python.exe -m atlas.main market-data coverage
+# Copy a reported dataset SHA-256 locally into $datasetId:
+.\.venv\Scripts\python.exe -m atlas.main market-data inspect $datasetId
+.\.venv\Scripts\python.exe -m atlas.main market-data validate $datasetId --json
+.\.venv\Scripts\python.exe -m atlas.main market-data backup local/backups/historical-checkpoint.sqlite3
+```
+
+Default storage is ignored `local/market-data/historical.sqlite3`; `--db` selects
+a separate test store. Downloads default to ten **artificial** minutes on
+2024-10-28. Repeating identical requests is idempotent; `--refresh` explicitly
+fetches again. Example output: `ARTIFICIAL_OFFLINE_FIXTURE | ACCEPTED`, 10 bars,
+`QUALITY: WARNING` for partial session, incomplete actions and unassessed
+survivorship. ACCEPTED is a storage state, not validated trading evidence.
+`--scenario missing` produces a quarantined dataset and exit code 1.
+
+After the acceptance remediation, interrupted refreshes can be resumed explicitly:
+repeat the original request/provider/config/database arguments with
+`--resume-job $jobId`, instead of `--refresh`. The failed import reports its job ID
+on stderr; request or policy changes are refused. Publication and inspection now
+verify bound requests, durable source chains, normalized bars and quality together.
+Metadata-only coverage shows `integrity=NOT_VERIFIED`; use inspect/validate to
+verify contents. Read commands refuse missing databases without initializing them.
+Inspect/validate `--json` stdout is one JSON document, including failure reports.
+
+Unknown original availability stays UNKNOWN and is excluded from strict consumer
+selection. No historical data flows into strategies, portfolio balances, research
+history, Telegram or dashboard startup. No Phase 3B/3C or broker execution is added.
+Read [architecture](docs/phase3a_architecture.md), [provider comparison and approval
+steps](docs/market_data_providers.md), [quality/storage/backup policy](docs/historical_data_quality.md)
+and [acceptance evidence](docs/phase3a_acceptance_report.md).
+
 ## Phase 2C: local research dashboard
 
 The authenticated dashboard adds persistent, isolated synthetic run history,
@@ -18,7 +65,8 @@ From the project directory in PowerShell (approved dependencies are installed):
 
 Create the workspace password at masked local prompts; then open
 **http://127.0.0.1:8000**. Stop with **Ctrl+C**. A fresh environment installs
-the approved `.[dev,dashboard]` extra. Chart.js is bundled locally; Node is unnecessary.
+the approved `.[dev,dashboard,cards,market-data]` extras for the full application.
+Chart.js is bundled locally; Node is unnecessary.
 
 Research runs now persist by default to ignored `local/atlas-history.sqlite3`.
 Identical inputs/code are deduplicated; `--new-run` creates a separate experiment.
@@ -156,7 +204,7 @@ git init -b main
 python --version
 python -m pip --version
 python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -e '.[dev]'
+.\.venv\Scripts\python.exe -m pip install -e '.[dev,dashboard,cards,market-data]'
 .\.venv\Scripts\python.exe -m atlas.main health
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m ruff check .
@@ -167,6 +215,29 @@ Use the full installed Python executable path if `python` resolves to the Window
 Store alias. Activation is optional; using the venv executable avoids changing
 PowerShell execution policy. Select `.venv\Scripts\python.exe` in VS Code's
 Python interpreter selector. Standard pytest is the test command.
+
+### Exact-version rebuild
+
+`requirements/phase3a-windows-py314.txt` captures the verified Windows x64 Python
+3.14.10 environment, including every extra, transitive package and the editable
+wheel's setuptools build backend. This fixes the earlier missing-extra setup gap.
+After approval for installation, use a **new** ignored environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m venv local/phase3a-rebuild-venv
+.\local\phase3a-rebuild-venv\Scripts\python.exe -m pip install --only-binary=:all: -r requirements/phase3a-windows-py314.txt
+.\local\phase3a-rebuild-venv\Scripts\python.exe -m pip install --no-deps --no-build-isolation -e '.[dev,dashboard,cards,market-data]'
+.\local\phase3a-rebuild-venv\Scripts\python.exe -m pip check
+.\local\phase3a-rebuild-venv\Scripts\python.exe -m pytest -q
+```
+
+The second install uses the explicitly pinned build backend rather than fetching
+an unpinned isolated backend. Package version equality and complete tests were
+verified in the separate rebuild. The snapshot is not a wheel-hash lock, does not
+bundle Python or wheels, and is not claimed verified on Python 3.13, Linux or
+macOS. Normal ranged extra installation above may resolve different versions.
+Calendar dependencies add pandas/numpy and small calendar/timezone helpers;
+no Node, Arrow, paid SDK or system setting change is required.
 
 For this machine, Python is installed at
 `$env:LOCALAPPDATA\Programs\Python\Python314\python.exe` and Git at

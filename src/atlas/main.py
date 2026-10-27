@@ -7,6 +7,11 @@ from atlas.config import AtlasError, Settings
 
 
 def main(argv: list[str] | None = None) -> int:
+    actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "market-data":
+        from atlas.market_data.cli import main as market_data_main
+
+        return market_data_main(actual[1:])
     parser = argparse.ArgumentParser(description="Atlas demo-only, read-only diagnostics")
     parser.add_argument(
         "command",
@@ -24,6 +29,7 @@ def main(argv: list[str] | None = None) -> int:
             "notifications-test",
             "notifications-send",
             "notifications-worker",
+            "market-data",
         ),
     )
     parser.add_argument("--scenario", default="orb")

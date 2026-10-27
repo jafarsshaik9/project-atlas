@@ -1,0 +1,15 @@
+{
+  "request": {
+    "provider": "fixture-v1",
+    "instrument": {
+      "instrument_id": "FIXTURE-XLON-GBX-001", "venue": "XLON",
+      "trading_currency": "GBP", "quote_unit": "GBX",
+      "instrument_timezone": "Europe/London", "exchange_timezone": "Europe/London",
+      "metadata_evidence": "Original artificial Atlas metadata; not a listing.",
+      "mappings": [{"provider": "fixture-v1", "symbol": "FAKE-XLON-GBX", "mic": "XLON", "currency_code": "GBX", "effective_from": "2000-01-01T00:00:00Z", "metadata_source": "Original artificial fixture specification v1"}]
+    },
+    "start": "2024-10-28T08:00:00Z", "end": "2024-10-28T08:10:00Z",
+    "resolution": "1min", "adjustment": "UNADJUSTED", "fixture_scenario": "normal"
+  },
+  "action_coverage": "UNKNOWN"
+}
