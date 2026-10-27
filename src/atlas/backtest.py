@@ -2,10 +2,12 @@
 
 import hashlib
 from collections import Counter
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, is_dataclass, replace
 from datetime import datetime, timedelta
 from decimal import Decimal
 from enum import Enum
+from itertools import groupby
 
 from atlas.config import AtlasError
 from atlas.costs import CostEngine
@@ -16,6 +18,8 @@ from atlas.domain import (
     DecisionStatus,
     MarketBar,
     MarketQuote,
+    PortfolioSnapshot,
+    Position,
     PriceBasis,
     TradeIntent,
     floor_step,
@@ -85,6 +89,7 @@ def run_backtest(
     policy: RiskPolicy | None = None,
     calendar: SessionCalendar | None = None,
     clock: ReplayClock | None = None,
+    observer: Callable[[str, PortfolioSnapshot, object, bool], None] | None = None,
 ) -> BacktestReport:
     """At most one hypothesis per instrument/session, no automatic retry of a rejected intent."""
     settings = settings if settings is not None else ResearchSettings()
@@ -94,6 +99,12 @@ def run_backtest(
     ledger = PortfolioLedger(settings)
     engine = costs if costs is not None else synthetic_costs()
     calendar = calendar if calendar is not None else fixture_calendar()
+    provenance = getattr(calendar, "provenance", None)
+    if not callable(provenance):
+        raise AtlasError("CALENDAR_PROVENANCE_UNAVAILABLE")
+    calendar_configuration = provenance()
+    if not isinstance(calendar_configuration, dict) or not calendar_configuration:
+        raise AtlasError("CALENDAR_PROVENANCE_UNAVAILABLE")
     risk = RiskEngine(ledger, engine, calendar, policy)
     strategy = ORBStrategy(orb)
     clock = clock if clock is not None else ReplayClock(dataset.session.open)
@@ -107,10 +118,52 @@ def run_backtest(
     peak = settings.starting_capital_gbp
     drawdown = utilisation = ZERO
     daily_breached = False
-    # Stable ties: bars before quotes, then original observation sequence.
+    stop_triggered = False
+
+    def emit(kind: str, value: object = None) -> None:
+        if observer is not None:
+            observer(kind, ledger.snapshot(clock.now()), value, risk.kill_switch)
+
+    emit("portfolio.valuation")
+    # Default stable ties: bars before quotes; known stop quotes take precedence.
     events = [(b.visible_time, 0, i, b) for i, b in enumerate(dataset.bars)]
     events += [(q.visible_time, 1, i, q) for i, q in enumerate(dataset.quotes)]
     events.sort(key=lambda event: event[:3])
+
+    def eligible_exit_quote(quote: MarketQuote, position: Position, now: datetime) -> bool:
+        return (
+            quote.instrument_id == inst.instrument_id
+            and quote.unit == inst.quote_unit
+            and quote.adjustment == Adjustment.RAW
+            and quote.complete
+            and not quote.quality
+            and inst.valid_price(quote.bid)
+            and inst.valid_price(quote.ask)
+            and position.opened_at < quote.event_time <= now
+            and quote.visible_time <= now
+            and now - quote.event_time <= policy.quote_max_age
+        )
+
+    def ordered_events():
+        for timestamp, group in groupby(events, key=lambda event: event[0]):
+            clock.advance(timestamp)
+            simultaneous = list(group)
+            state = ledger.snapshot(timestamp)
+            if state.positions:
+                position = state.positions[0]
+                # All these observations are available now. Resolve simultaneous
+                # adverse evidence before a profitable bar/time exit, without
+                # consulting any later availability group.
+                simultaneous.sort(
+                    key=lambda event: (
+                        not (
+                            isinstance(event[3], MarketQuote)
+                            and eligible_exit_quote(event[3], position, timestamp)
+                            and event[3].bid <= position.signal.stop
+                        )
+                    )
+                )
+            yield from simultaneous
 
     def close_position(price: Decimal, basis: PriceBasis, now: datetime, reason: str) -> None:
         snapshot = ledger.snapshot(now)
@@ -141,9 +194,9 @@ def run_backtest(
             ),
         )
         quality[f"EXIT_{reason}"] += 1
+        emit("fill.confirmed", ledger.history[-1])
 
-    for timestamp, _, _, observation in events:
-        clock.advance(timestamp)
+    for _timestamp, _, _, observation in ordered_events():
         now = clock.now()
         for intent_id, signal in list(pending.items()):
             if now >= signal.expires_at:
@@ -157,7 +210,8 @@ def run_backtest(
                 position = snapshot.positions[0]
                 # A candle starting before the fill may contain pre-fill extrema.
                 if (
-                    bar.complete
+                    not stop_triggered
+                    and bar.complete
                     and not bar.quality
                     and bar.unit == inst.quote_unit
                     and bar.instrument_id == inst.instrument_id
@@ -181,26 +235,28 @@ def run_backtest(
             if result.signal is not None and result.signal.intent_id not in identified:
                 identified.add(result.signal.intent_id)
                 pending[result.signal.intent_id] = result.signal
+                emit("signal.generated", result.signal)
         elif isinstance(observation, MarketQuote):
             quote = observation
-            valid_quote = (
-                quote.instrument_id == inst.instrument_id
-                and quote.unit == inst.quote_unit
-                and quote.adjustment == Adjustment.RAW
-                and quote.complete
-                and not quote.quality
-                and inst.valid_price(quote.bid)
-                and inst.valid_price(quote.ask)
-            )
-            if snapshot.positions and valid_quote:
-                # Stale quotes cannot mark positions or provide time-exit fills.
-                if quote.event_time <= now and now - quote.event_time <= policy.quote_max_age:
-                    ledger.mark(inst.instrument_id, quote.bid, dataset.fx, now)
-                    if now >= snapshot.positions[0].signal.time_exit:
-                        if quote.bid_size >= snapshot.positions[0].quantity:
-                            close_position(quote.bid, PriceBasis.EXECUTABLE, now, "TIME")
-                        else:
-                            quality["INSUFFICIENT_TIME_EXIT_LIQUIDITY"] += 1
+            if snapshot.positions and eligible_exit_quote(quote, snapshot.positions[0], now):
+                position = snapshot.positions[0]
+                ledger.mark(inst.instrument_id, quote.bid, dataset.fx, now)
+                stop_triggered = stop_triggered or quote.bid <= position.signal.stop
+                if stop_triggered:
+                    if quote.bid_size >= position.quantity:
+                        close_position(
+                            min(quote.bid, position.signal.stop),
+                            PriceBasis.EXECUTABLE,
+                            now,
+                            "QUOTE_STOP_OR_GAP",
+                        )
+                    else:
+                        quality["INSUFFICIENT_STOP_EXIT_LIQUIDITY"] += 1
+                elif now >= position.signal.time_exit:
+                    if quote.bid_size >= position.quantity:
+                        close_position(quote.bid, PriceBasis.EXECUTABLE, now, "TIME")
+                    else:
+                        quality["INSUFFICIENT_TIME_EXIT_LIQUIDITY"] += 1
             for intent_id, signal in list(pending.items()):
                 if (
                     quote.event_time <= signal.decision_time
@@ -222,6 +278,7 @@ def run_backtest(
                     if probe.status == DecisionStatus.APPROVED:
                         probe = replace(probe, status=DecisionStatus.RESEARCH_ONLY, reasons=reasons)
                     decisions.append(probe)
+                    emit("risk.decided", probe)
                     rejected.append((intent_id, reasons))
                     risk_events.append((intent_id, reasons))
                     del pending[intent_id]
@@ -237,11 +294,13 @@ def run_backtest(
                     now,
                 )
                 decisions.append(decision)
+                emit("risk.decided", decision)
                 del pending[intent_id]
                 if decision.status != DecisionStatus.APPROVED:
                     rejected.append((intent_id, decision.reasons))
                     risk_events.append((intent_id, decision.reasons))
                     continue
+                emit("intent.created", intent)
                 fill_qty = floor_step(min(qty, quote.ask_size), inst.quantity_step)
                 if fill_qty < inst.minimum_quantity:
                     ledger.cancel(intent_id, now)
@@ -273,6 +332,7 @@ def run_backtest(
                 # One next-quote fill attempt; release the unfilled remainder.
                 ledger.cancel(intent_id, now)
                 ledger.mark(inst.instrument_id, quote.bid, dataset.fx, now)
+                emit("fill.confirmed", ledger.history[-1])
                 if fill_qty != qty:
                     quality["PARTIAL_FILL_REMAINDER_CANCELLED"] += 1
         snapshot = ledger.snapshot(now)
@@ -289,9 +349,11 @@ def run_backtest(
         )
         if daily_loss >= settings.daily_loss_threshold_gbp and not daily_breached:
             risk_events.append((now.isoformat(), ("DAILY_LOSS_THRESHOLD",)))
+            emit("risk.breached", ("DAILY_LOSS_THRESHOLD",))
             daily_breached = True
         if not snapshot.consistent:
             raise AtlasError("Synthetic ledger failed reconciliation.")
+        emit("portfolio.valuation")
     for intent_id in pending:
         rejected.append((intent_id, ("NO_ACTIONABLE_PRICE",)))
     final = ledger.snapshot(clock.now())
@@ -303,7 +365,11 @@ def run_backtest(
             "risk_policy": policy,
             "orb": orb,
             "schedules": engine.schedules,
-            "fill_model": "next-quote-one-attempt; stop-first; gap-at-worse-open; v1",
+            "calendar": calendar_configuration,
+            "fill_model": (
+                "next-quote-one-attempt; quote-stop-first-at-ties; latched-stop; "
+                "gap-at-worse-price; v2"
+            ),
             "account_base_currency": "GBP",
         }
     )

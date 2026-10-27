@@ -140,7 +140,24 @@ class PortfolioLedger:
         tolerance = Decimal("0.000000000000000001")
         return (
             ZERO <= reserved <= self._cash
-            and all(p.quantity > 0 for p in self._positions.values())
+            and all(
+                p.quantity > 0
+                and p.planned_risk_gbp > 0
+                and p.stressed_risk_gbp >= p.planned_risk_gbp
+                for p in self._positions.values()
+            )
+            and all(
+                r.stressed_risk_gbp >= r.planned_risk_gbp >= 0
+                and (
+                    r.planned_risk_gbp > 0
+                    or (
+                        (position := self._positions.get(r.instrument.instrument_id)) is not None
+                        and position.signal.intent_id == r.intent_id
+                        and position.planned_risk_gbp > 0
+                    )
+                )
+                for r in self._reservations.values()
+            )
             and abs(self._cash + basis - self.settings.starting_capital_gbp - self._realized)
             <= tolerance
         )
@@ -199,6 +216,8 @@ class PortfolioLedger:
                 raise AtlasError("INVALID_QUANTITY")
             for amount in (cash_gbp, planned_risk_gbp, stressed_risk_gbp):
                 number(amount)
+            if planned_risk_gbp <= 0 or stressed_risk_gbp < planned_risk_gbp:
+                raise AtlasError("UNKNOWN_OR_INVALID_RISK")
             if cash_gbp <= 0 or cash_gbp > snapshot.available_cash_gbp:
                 raise AtlasError("INSUFFICIENT_CASH")
             for limit in (entry_price_ceiling, fx_ceiling, entry_fee_budget_gbp):
@@ -267,6 +286,8 @@ class PortfolioLedger:
             reservation = self._reservations.get(intent_id)
             if reservation is None or now >= reservation.signal.expires_at:
                 raise AtlasError("NO_ACTIVE_RESERVATION")
+            if not self.reconcile():
+                raise AtlasError("SNAPSHOT_INCONSISTENT")
             inst = reservation.instrument
             validate_fx(rate, inst, now)
             if (
@@ -379,6 +400,10 @@ class PortfolioLedger:
             proceeds = inst.quote_unit.major(price) * quantity * rate.gbp_per_unit
             if fees_gbp > proceeds:
                 raise AtlasError("EXIT_FEES_EXCEED_PROCEEDS")
+            # The first partial entry carries the full approved risk envelope.
+            # Any exit invalidates its unfilled remainder before risk can be
+            # released, so that remainder can never reopen an unbudgeted position.
+            self.cancel(position.signal.intent_id, now)
             fraction = quantity / position.quantity
             basis = position.cost_basis_gbp * fraction
             net_pnl = proceeds - fees_gbp - basis
@@ -396,8 +421,10 @@ class PortfolioLedger:
                     entry_notional_gbp=position.entry_notional_gbp * (1 - fraction),
                     entry_cost_gbp=position.entry_cost_gbp * (1 - fraction),
                     mark_value_gbp=position.mark_value_gbp * (1 - fraction),
-                    planned_risk_gbp=position.planned_risk_gbp * (1 - fraction),
-                    stressed_risk_gbp=position.stressed_risk_gbp * (1 - fraction),
+                    # Keep the conservative envelope until flat. Proportional
+                    # release could undercount fixed costs of the remaining exit.
+                    planned_risk_gbp=position.planned_risk_gbp,
+                    stressed_risk_gbp=position.stressed_risk_gbp,
                 )
             self._record(
                 FillRecord(

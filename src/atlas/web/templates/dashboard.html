@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><title>Project Atlas · Research Command Center</title>
+<link rel="stylesheet" href="/static/atlas.css"><script src="/static/vendor/chart.umd.js" defer></script><script src="/static/atlas.js" defer></script></head>
+<body>
+<svg class="icon-library" aria-hidden="true"><defs>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M6 15l5-5 4 3 6-8"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m3 7 9-4 9 4-9 4-9-4Zm0 5 9 4 9-4M3 17l9 4 9-4"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h1M3 12h1M3 18h1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z"/><path d="m8 12 3 3 5-6"/></symbol>
+<symbol id="i-pulse" viewBox="0 0 24 24"><path d="M2 12h5l3-8 4 16 3-8h5"/></symbol>
+<symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+</defs></svg>
+<div id="scrim" class="scrim" hidden></div>
+<aside class="sidebar" id="sidebar" aria-label="Workspace navigation">
+<a class="brand" href="/"><span class="brand-mark">A<span>·</span></span><span>PROJECT<br><strong>ATLAS</strong></span></a>
+<div class="workspace-label">RESEARCH WORKSPACE <span>01</span></div>
+<nav>
+<button class="nav-item active" data-view="overview"><svg class="icon"><use href="#i-grid"/></svg>Overview<span class="nav-dot"></span></button>
+<button class="nav-item" data-view="positions"><svg class="icon"><use href="#i-layers"/></svg>Open positions</button>
+<button class="nav-item" data-view="trades"><svg class="icon"><use href="#i-list"/></svg>Trade history</button>
+<button class="nav-item" data-view="risk"><svg class="icon"><use href="#i-shield"/></svg>Risk monitor</button>
+<button class="nav-item" data-view="activity"><svg class="icon"><use href="#i-pulse"/></svg>Bot activity</button>
+<button class="nav-item" data-view="system"><svg class="icon"><use href="#i-chart"/></svg>System health</button>
+</nav>
+<div class="sidebar-bottom"><div class="sandbox-card"><span class="dot amber"></span> SYNTHETIC ENVIRONMENT<p>Research with discipline.<br>No broker orders. No live capital.</p></div>
+<button id="logout" class="text-button">↪ &nbsp; Sign out</button><div class="sidebar-foot">ATLAS FOUNDATION <span>PHASE 2C</span></div></div>
+</aside>
+<div class="workspace">
+<header class="topbar"><button id="menu" class="icon-button mobile-only" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
+<div class="breadcrumb">WORKSPACE <span>/</span> <b id="breadcrumb-page">OVERVIEW</b></div>
+<div class="topbar-right"><span class="connection" id="connection"><span class="dot"></span> Connecting</span><span class="execution-lock">EXECUTION DISABLED</span><span class="avatar" aria-label="Atlas workspace">A</span></div></header>
+<main id="main" tabindex="-1">
+<div class="page-heading"><div><p class="eyebrow">PROJECT ATLAS</p><h1 id="page-title">Research overview</h1><p class="muted">Trading Research Command Center</p></div>
+<div class="heading-actions"><label class="sr-only" for="run-select">Select isolated research run</label><select id="run-select"><option value="">Loading research runs…</option></select><button id="refresh" class="icon-button" aria-label="Refresh data"><svg class="icon"><use href="#i-refresh"/></svg></button></div></div>
+<div class="research-banner"><span class="mode-pill">SYNTHETIC</span><span><strong>Research only — not live trading performance.</strong> Each run has its own virtual portfolio. Practice account balances are not used.</span></div>
+<div id="error-banner" class="notice error" role="alert" hidden></div>
+<div id="empty-banner" class="notice" hidden>No persisted research yet. Run <code>python -m atlas.main synthetic-backtest</code> locally, then refresh. No performance is invented.</div>
+
+<section id="view-overview" class="view">
+<div class="section-caption"><span>PORTFOLIO AT A GLANCE</span><span id="as-of" class="muted">Awaiting persisted snapshot</span></div>
+<div class="kpi-grid" id="kpi-grid" aria-live="polite"></div>
+<div class="overview-grid">
+<article class="panel equity-panel"><div class="panel-heading"><div><p class="eyebrow">PORTFOLIO EQUITY</p><h2>Every observation. In context.</h2></div><div class="periods" id="periods"><button data-period="all" class="selected">All</button><button data-period="day" disabled>Day</button><button data-period="week" disabled>Week</button><button data-period="month" disabled>Month</button></div></div>
+<div class="chart-wrap large"><canvas id="equity-chart" role="img" aria-label="Portfolio equity from persisted research snapshots"></canvas><p class="chart-empty" id="equity-empty">Awaiting research observations</p></div><div class="chart-footer"><span><i class="legend-line"></i> Portfolio equity <i class="legend-line reference"></i> Starting capital</span><span id="chart-note">Persisted observations only · UTC</span></div></article>
+<article class="panel status-panel"><p class="eyebrow">RESEARCH ENGINE</p><div class="engine-state" id="engine-state">—</div><p class="muted">Offline command runner.<br>No continuous scanning is implied.</p><div class="status-rows" id="bot-status"></div><div class="quiet-callout"><svg class="icon"><use href="#i-shield"/></svg><span>No trade is a valid outcome.<br>Risk remains independent.</span></div></article>
+<article class="panel"><div class="panel-heading"><div><p class="eyebrow">PROFIT &amp; LOSS</p><h2>The composition of change</h2></div><span class="unit-tag">GBP</span></div><div class="chart-wrap"><canvas id="pnl-chart" role="img" aria-label="Realized, unrealized and total research profit and loss"></canvas></div><p class="fine-print">Unrealised values include entry fees, exclude future exit costs.</p></article>
+<article class="panel"><div class="panel-heading"><div><p class="eyebrow">DRAWDOWN</p><h2>Distance from the observed peak</h2></div><span class="unit-tag">GBP</span></div><div class="chart-wrap"><canvas id="drawdown-chart" role="img" aria-label="Drawdown from observed research equity peak"></canvas></div><p class="fine-print">Observed marks only. Unseen intrabar extremes are not inferred.</p></article>
+</div>
+</section>
+
+<section id="view-positions" class="view" hidden><article class="panel"><div class="panel-heading"><div><p class="eyebrow">VIRTUAL EXPOSURE</p><h2>Open positions</h2></div><span class="unit-tag">SIMULATED · GBP REPORTING</span></div><div class="table-scroll"><table><thead><tr><th>Instrument / venue</th><th>Direction</th><th>Quantity</th><th>Average entry</th><th>Mark</th><th>Market value</th><th>Unrealised P/L</th><th>Planned risk</th><th>Entry / strategy</th></tr></thead><tbody id="positions-body"></tbody></table></div><div id="positions-empty" class="empty-state"><svg class="icon"><use href="#i-layers"/></svg><h3>No open exposure</h3><p>The selected run has no open positions.<br>Unallocated capital remains cash.</p></div></article></section>
+
+<section id="view-trades" class="view" hidden><article class="panel">
+<div class="panel-heading"><div><p class="eyebrow">CONFIRMED SIMULATED FILLS</p><h2>A complete execution record</h2></div><span class="unit-tag">NOT BROKER EXECUTIONS</span></div>
+<div class="filters"><label class="sr-only" for="trade-search">Search instrument</label><input id="trade-search" placeholder="Search instrument…" maxlength="80"><label class="sr-only" for="trade-side">Trade side</label><select id="trade-side"><option value="">All sides</option><option value="buy">BUY</option><option value="sell">SELL</option></select><span class="status-tag">SIMULATED_CONFIRMED</span><label class="sr-only" for="trade-limit">Page size</label><select id="trade-limit"><option>25</option><option>50</option><option>100</option></select></div>
+<div class="table-scroll"><table><thead><tr><th><button data-sort="timestamp">Timestamp ↕</button></th><th><button data-sort="instrument">Instrument ↕</button></th><th><button data-sort="side">Side ↕</button></th><th>Filled quantity</th><th>Fill price</th><th>Gross GBP</th><th>Fees GBP</th><th>Realised net GBP</th><th>Details</th></tr></thead><tbody id="trades-body"></tbody></table></div>
+<div id="trades-empty" class="empty-state"><h3>No confirmed fills</h3><p>Signals and unfilled intents are not executed trades.</p></div>
+<div class="pagination"><span id="trade-count">0 fills</span><div><button id="trade-prev" class="secondary">← Previous</button><button id="trade-next" class="secondary">Next →</button></div></div></article></section>
+
+<section id="view-risk" class="view" hidden><div class="notice">Planned stop risk is not a guaranteed loss cap. Gaps, slippage and costs can exceed planned or stressed losses. All settings are provisional research parameters.</div><div id="risk-cards" class="risk-grid"></div><article class="panel"><div class="panel-heading"><div><p class="eyebrow">INDEPENDENT RISK ENGINE</p><h2>Recent decisions &amp; alerts</h2></div><span class="unit-tag">READ ONLY</span></div><div id="risk-alerts" class="activity-list"></div></article></section>
+
+<section id="view-activity" class="view" hidden><article class="panel"><div class="panel-heading"><div><p class="eyebrow">CAUSAL ACTIVITY HISTORY</p><h2>What happened, and why</h2></div><select id="activity-kind" aria-label="Filter activity"><option value="">All events</option><option value="research.completed">Research complete</option><option value="signal.generated">Strategy signals</option><option value="risk.accepted">Risk accepted</option><option value="risk.rejected">Risk rejected</option><option value="simulated.fill">Confirmed fills</option><option value="simulated.partial_fill">Partial fills</option><option value="portfolio.valuation">Valuations</option><option value="risk.breached">Risk breaches</option><option value="system.error">System errors</option><option value="notification.failed">Notification failures</option><option value="notification.succeeded">Notification successes</option></select></div><div id="activity-list" class="activity-list"></div><div class="pagination"><span id="activity-count"></span><div><button id="activity-prev" class="secondary">← Previous</button><button id="activity-next" class="secondary">Next →</button></div></div></article></section>
+
+<section id="view-system" class="view" hidden><div id="health-cards" class="risk-grid"></div><article class="panel"><p class="eyebrow">SAFE OPERATING BOUNDARIES</p><h2>Observe without trading authority</h2><div class="system-notes"><p>This dashboard reads persisted research events. It cannot place orders, run a strategy, change a risk limit or enable execution.</p><p>Telegram delivery requires local configuration, explicit synthetic opt-in and a separately invoked delivery worker. A configured bot is not proof of successful delivery.</p><p>SQLite restores dashboard history after restart. It does not resume an in-flight ledger or reconstruct a production trading process.</p><p>All monetary reporting is in GBP. Native prices retain their GBP, GBX or USD quote units. Unavailable values are shown as N/A.</p></div></article></section>
+
+<footer class="workspace-footer"><span>PROJECT ATLAS <b>·</b> Evidence before execution</span><span id="poll-status">Read-only views · 5-second polling</span></footer>
+</main></div>
+<dialog id="trade-detail" aria-labelledby="detail-title"><div class="panel-heading"><h2 id="detail-title">Simulated fill details</h2><button id="close-detail" class="icon-button" aria-label="Close details">×</button></div><dl id="detail-body"></dl><p class="fine-print">Confirmed local simulation only. No broker order was placed.</p></dialog>
+</body></html>
+

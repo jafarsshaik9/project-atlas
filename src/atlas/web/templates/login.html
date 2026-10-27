@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Atlas · Sign in</title><link rel="stylesheet" href="/static/atlas.css"><script src="/static/login.js" defer></script></head>
+<body class="login-body"><main class="login-card">
+<div class="brand-mark" aria-hidden="true">A<span>·</span></div><p class="eyebrow">PROJECT ATLAS</p>
+<h1>A clearer view.<br>A measured approach.</h1><p class="muted">Trading Research Command Center</p>
+<div class="mode-pill">SYNTHETIC RESEARCH ONLY</div>
+{% if configured %}
+<form id="login-form"><label for="password">Workspace password</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="1024" autofocus>
+<button class="primary" type="submit">Enter workspace <span aria-hidden="true">↗</span></button><p id="login-error" role="alert" class="negative"></p></form>
+{% else %}
+<div class="notice">First-time setup required. In your local terminal, run <code>python -m atlas.main dashboard-setup</code> and create a password. Refresh this page afterwards.</div>
+{% endif %}
+<p class="fine-print">Local research. Independent virtual capital.<br>Broker execution is disabled.</p>
+</main><div class="login-caption">DISCIPLINE BEFORE OPPORTUNITY <span>ATLAS / RESEARCH</span></div></body></html>
+

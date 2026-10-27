@@ -16,3 +16,10 @@ local/
 .vscode/
 .coverage
 htmlcov/
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+*.pem
+*.key

@@ -1,5 +1,11 @@
 # Atlas architecture — Phase 2B implementation and future design
 
+Phase 2C update (27 October 2026): authenticated local monitoring, isolated
+SQLite research activity and opt-in Telegram delivery are implemented separately
+from accounting/risk. See [phase2c_architecture.md](phase2c_architecture.md) for
+the current observation/read-model boundaries and security/recovery limits.
+The original Phase 2B architecture below remains its historical design basis.
+
 Status: updated 26 October 2026 after the approved offline Phase 2B implementation.
 The components listed below are implemented; broader production components in
 the intended flow remain future design. See

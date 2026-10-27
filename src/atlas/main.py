@@ -9,7 +9,22 @@ from atlas.config import AtlasError, Settings
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Atlas demo-only, read-only diagnostics")
     parser.add_argument(
-        "command", choices=("health", "broker-check", "research-check", "synthetic-backtest")
+        "command",
+        choices=(
+            "health",
+            "broker-check",
+            "research-check",
+            "synthetic-backtest",
+            "dashboard",
+            "dashboard-check",
+            "dashboard-setup",
+            "history-backup",
+            "notifications-preview",
+            "notifications-design-preview",
+            "notifications-test",
+            "notifications-send",
+            "notifications-worker",
+        ),
     )
     parser.add_argument("--scenario", default="orb")
     parser.add_argument("--venue", choices=("XLON", "XNYS", "XNAS"), default="XLON")
@@ -19,6 +34,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--risk-config")
     parser.add_argument("--cost-config")
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--history-db")
+    parser.add_argument("--no-persist", action="store_true")
+    parser.add_argument("--new-run", action="store_true")
+    parser.add_argument("--notify-synthetic", action="store_true")
+    parser.add_argument("--notify-summary", action="store_true")
+    parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--lan", action="store_true")
+    parser.add_argument("--allow-insecure-lan", action="store_true")
+    parser.add_argument("--tls-cert")
+    parser.add_argument("--tls-key")
+    parser.add_argument("--backup-path")
+    parser.add_argument("--allow-synthetic", action="store_true")
     args = parser.parse_args(argv)
     try:
         if not (3, 13) <= sys.version_info[:2] < (3, 15):
@@ -27,6 +55,10 @@ def main(argv: list[str] | None = None) -> int:
             from atlas.research_cli import run
 
             return run(args)
+        if args.command not in ("health", "broker-check"):
+            from atlas.dashboard_cli import run as run_dashboard_command
+
+            return run_dashboard_command(args)
         settings = Settings.from_environment()
         if args.command == "health":
             from atlas.research import ResearchSettings, VirtualLedger

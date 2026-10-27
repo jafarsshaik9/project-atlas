@@ -31,6 +31,10 @@ class ReplayClock:
 class SessionCalendar(Protocol):
     def session(self, venue: Venue, local_date: date) -> TradingSession | None: ...
 
+    def provenance(self) -> dict:
+        """Return complete, deterministic JSON-compatible calendar assumptions."""
+        ...
+
 
 @dataclass(frozen=True)
 class FixtureCalendar:
@@ -52,6 +56,31 @@ class FixtureCalendar:
             if entry_venue == venue and entry_day == local_date:
                 return session
         raise AtlasError("Calendar date is unknown; new risk is disabled.")
+
+    def provenance(self) -> dict:
+        return {
+            "schema": "explicit-session-calendar-v1",
+            "version": self.version,
+            "unknown_date_policy": "reject",
+            "entries": [
+                {
+                    "venue": venue.value,
+                    "local_date": day.isoformat(),
+                    "session": None
+                    if session is None
+                    else {
+                        "open": session.open.isoformat(),
+                        "close": session.close.isoformat(),
+                        "timezone_name": session.timezone_name,
+                        "utc_offset_minutes": session.utc_offset_minutes,
+                        "half_day": session.half_day,
+                    },
+                }
+                for venue, day, session in sorted(
+                    self.entries, key=lambda entry: (entry[0].value, entry[1])
+                )
+            ],
+        }
 
 
 def local_time(session: TradingSession, timestamp: datetime) -> datetime:

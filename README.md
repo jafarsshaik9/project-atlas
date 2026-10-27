@@ -1,5 +1,40 @@
 # Project Atlas — Offline Quantitative Research
 
+## Phase 2C: local research dashboard
+
+The authenticated dashboard adds persistent, isolated synthetic run history,
+portfolio/risk charts, confirmed-fill history, activity and opt-in Telegram alerts.
+**SYNTHETIC RESEARCH ONLY — NOT LIVE TRADING PERFORMANCE.** No broker order
+capability is enabled, and the GBP 1,000 virtual capital stays independent of Practice funds.
+
+From the project directory in PowerShell (approved dependencies are installed):
+
+```powershell
+.\.venv\Scripts\python.exe -m atlas.main synthetic-backtest
+.\.venv\Scripts\python.exe -m atlas.main dashboard-setup
+.\.venv\Scripts\python.exe -m atlas.main dashboard-check
+.\.venv\Scripts\python.exe -m atlas.main dashboard
+```
+
+Create the workspace password at masked local prompts; then open
+**http://127.0.0.1:8000**. Stop with **Ctrl+C**. A fresh environment installs
+the approved `.[dev,dashboard]` extra. Chart.js is bundled locally; Node is unnecessary.
+
+Research runs now persist by default to ignored `local/atlas-history.sqlite3`.
+Identical inputs/code are deduplicated; `--new-run` creates a separate experiment.
+`--no-persist` keeps a replay entirely in memory. Separate runs never compound P/L.
+Research-check remains offline and does not create portfolio history.
+
+Read the [dashboard/mobile/backup guide](docs/dashboard_user_guide.md),
+[Telegram setup](docs/telegram_setup.md), [Phase 2C architecture](docs/phase2c_architecture.md)
+and [verification report](docs/phase2c_report.md). Telegram is disabled by default;
+`notifications-preview` is offline. Real delivery requires your explicit local
+test invocation and is not claimed verified. LAN access requires authentication
+and explicit configuration; LAN HTTP is unencrypted. No firewall/router changes occur.
+
+SQLite restores dashboard views after restart, not an in-flight trading ledger.
+Charts show actual persisted snapshots; insufficient-period views stay unavailable.
+
 Atlas now includes a working offline Phase 2B research foundation and the preserved
 demo-only, read-only Trading 212 Invest Practice diagnostics. Planned virtual
 capital defaults to GBP 1,000 independently of the Practice account balance.
@@ -57,7 +92,8 @@ The examples also define provisional allocation, gap-stress and quote-age settin
 Implemented modules: validated domain contracts; explicit synthetic sessions and
 clock; original synthetic observations; effective-dated costing; transactional
 in-memory portfolio accounting; independent risk decisions and reservations;
-ORB v1; chronological replay and reports. No additional dependency was installed.
+ORB v1; chronological replay and reports. Phase 2B needed no new dependency;
+Phase 2C adds the project-local dashboard dependencies described above.
 
 Read [synthetic data](docs/synthetic_data.md), [fill/cost/risk assumptions and
 limitations](docs/backtesting_assumptions.md), [architecture](docs/atlas_architecture.md)
@@ -212,7 +248,8 @@ Verified 26 October 2026 against the
 - Rate pacing is per client, not a distributed account limiter. Run checks at
   least five seconds apart and coordinate other clients using the same account.
 - Static sanitised errors exclude upstream payloads and exception details. The
-  package does not configure logging or persist account data.
+  broker diagnostics do not configure logging or persist broker account data.
+  Phase 2C separately persists synthetic research activity and redacts Telegram transport logs.
 
 ## Troubleshooting
 

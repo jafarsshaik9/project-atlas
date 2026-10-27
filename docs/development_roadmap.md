@@ -1,5 +1,12 @@
 # Atlas development roadmap — after Phase 2A
 
+Phase 2C checkpoint (27 October 2026): local authenticated dashboard, versioned
+SQLite event history and opt-in Telegram outbox are implemented in synthetic-only
+mode after the Phase 2B acceptance gate passed. See [phase2c_report.md](phase2c_report.md).
+No continuous scanner, real-data provider, ledger-resume mechanism or broker sender
+was added. Real Telegram delivery and actual phone/Wi-Fi reachability require
+user-local verification. Further phases still require separate authorization.
+
 Date: 26 October 2026. The approved Phase 2B offline foundation is implemented:
 contracts, fixture sessions, synthetic UK/US data, costs, portfolio accounting,
 independent risk, ORB v1 and chronological replay with CLI reports. No dependency,

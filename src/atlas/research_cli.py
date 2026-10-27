@@ -105,7 +105,25 @@ def run(args) -> int:
         print(f"Risk policy {policy.version}; no leverage, shorts or broker execution.")
         print("Offline checks passed. No credentials, network or AI service used.")
         return 0
-    report = run_backtest(data, settings, costs=costs, orb=orb, policy=policy)
+    if args.no_persist:
+        if args.notify_synthetic:
+            raise AtlasError("Notifications require persisted, confirmed simulation events.")
+        report = run_backtest(data, settings, costs=costs, orb=orb, policy=policy)
+    else:
+        from atlas.history import HistoryStore
+        from atlas.research_history import recorded_backtest
+
+        report, _ = recorded_backtest(
+            data,
+            settings,
+            costs=costs,
+            orb=orb,
+            policy=policy,
+            store=HistoryStore(args.history_db),
+            new_run=args.new_run,
+            notify=args.notify_synthetic,
+            notify_summary=args.notify_summary,
+        )
     if args.json:
         print(json.dumps(report.to_dict(), indent=2, ensure_ascii=True))
     else:
