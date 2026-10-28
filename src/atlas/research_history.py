@@ -101,9 +101,11 @@ def recorded_backtest(
     new_run=False,
     notify=False,
     notify_summary=False,
+    calendar=None,
+    ignore_predecision_quotes=False,
 ):
     store = store if store is not None else HistoryStore()
-    calendar = fixture_calendar()
+    calendar = calendar if calendar is not None else fixture_calendar()
     identity = jsonable(
         {
             "adapter": "activity-v1",
@@ -115,6 +117,7 @@ def recorded_backtest(
             "policy": policy,
             "calendar": calendar.provenance(),
             "nonce": uuid4().hex if new_run else None,
+            "ignore_predecision_quotes": ignore_predecision_quotes,
         }
     )
     run_id = hashlib.sha256(canonical(identity).encode()).hexdigest()
@@ -151,6 +154,7 @@ def recorded_backtest(
             policy=policy,
             calendar=calendar,
             observer=observe if claimed else None,
+            ignore_predecision_quotes=ignore_predecision_quotes,
         )
         if not claimed:
             return report, run_id

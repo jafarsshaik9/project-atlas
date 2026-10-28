@@ -20,6 +20,13 @@ from atlas.notifications import (
 
 
 def run(args):
+    from atlas.local_environment import service_environment
+
+    with service_environment():
+        return _run(args)
+
+
+def _run(args):
     Settings(environment=os.environ.get("ATLAS_ENV", "demo"))
     if args.command == "notifications-design-preview":
         from atlas.telegram_preview import save_previews

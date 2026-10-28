@@ -84,6 +84,10 @@ def load_bundle(path):
 
 def main(argv=None):
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "diagnose":
+        from atlas.research_diagnostics import main as diagnostics_main
+
+        return diagnostics_main(actual[1:])
     if actual and actual[0] == "collect":
         from atlas.alpaca_collection_cli import main as collection_main
 
@@ -93,6 +97,7 @@ def main(argv=None):
     )
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("collect", help="Alpaca collection; dry-run unless explicitly approved")
+    commands.add_parser("diagnose", help="Read-only historical ORB diagnostics and reporting")
     plan = commands.add_parser("plan")
     plan.add_argument("--provider", choices=("alpaca", "massive"), default="alpaca")
     plan.add_argument(
