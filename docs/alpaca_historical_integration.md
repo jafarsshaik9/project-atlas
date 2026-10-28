@@ -97,11 +97,12 @@ explicitly labelled ASSUMED exploratory research uses the existing replay and FX
 assumptions. USD prices are not GBP; existing backtesting requires explicit FX and
 cost policies. No point-in-time verification is claimed from a successful download.
 
-Full network collection remains disabled in this release: only the separately
-authorized one-session AAPL pilot can use the network collector. Enabling the
-full plan requires separate user authorization and a bounded activation change,
-review of the pilot result and applicable internal-use terms. No subscription
-purchase or redistribution permission is inferred.
+The full collection command is now implemented, with dry-run as the default.
+Execution remains blocked until separately confirmed account permissions are
+recorded and the user explicitly approves execution. See
+[full collection readiness](alpaca_full_collection_readiness.md) for exact commands,
+immutable reuse, checkpoint recovery and the independent permission gate. No
+subscription purchase or redistribution permission is inferred.
 
 ## Validation and pilot
 
@@ -148,5 +149,5 @@ Report: `local/research/two-year/alpaca-pilot-report.json` (ignored runtime file
 The existing Massive AAPL database's SHA-256 was unchanged.
 
 No credential/authentication blocker remains for this pilot. Full collection
-still requires separate review/authorization and bounded network activation.
+still requires separate account-permission confirmation and execution approval.
 No two-year download, account/broker call, order, commit or push occurred.

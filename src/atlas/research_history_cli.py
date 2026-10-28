@@ -1,4 +1,4 @@
-"""Dry-run planning and offline multi-session research. No collection/network switch."""
+"""Historical research and explicitly gated Alpaca collection; dry-run by default."""
 
 import argparse
 import json
@@ -83,10 +83,16 @@ def load_bundle(path):
 
 
 def main(argv=None):
+    actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "collect":
+        from atlas.alpaca_collection_cli import main as collection_main
+
+        return collection_main(actual[1:])
     parser = argparse.ArgumentParser(
-        description="Offline historical research and dry-run plans only"
+        description="Historical research and explicitly gated collection; dry-run by default"
     )
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("collect", help="Alpaca collection; dry-run unless explicitly approved")
     plan = commands.add_parser("plan")
     plan.add_argument("--provider", choices=("alpaca", "massive"), default="alpaca")
     plan.add_argument(

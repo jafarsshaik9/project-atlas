@@ -107,6 +107,8 @@ class AlpacaQuota:
                     )
                     db.execute("UPDATE state SET last=?,pending=? WHERE id=1", (now, identity))
                     return identity
+                if wait > 300:
+                    raise AtlasError("Alpaca cooldown requires later resume; quota was not reset.")
             heartbeat()
             self.sleep(min(wait, 5))
 

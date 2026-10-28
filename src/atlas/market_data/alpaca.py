@@ -9,6 +9,7 @@ import sqlite3
 import time
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 import httpx
@@ -32,6 +33,25 @@ URL = "https://data.alpaca.markets/v2/stocks/bars"
 UNIVERSE = ("AAPL", "MSFT", "NVDA", "AMZN", "GOOGL")
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_CACHE = ROOT / "local/market-data/alpaca-pages.sqlite3"
+
+
+def retry_delay(value, now):
+    """Never shorten a server delay. Very long delays are persisted for later resume."""
+    if value is None:
+        return 60.0
+    try:
+        seconds = float(value)
+    except ValueError:
+        try:
+            stamp = parsedate_to_datetime(value)
+            if stamp.tzinfo is None:
+                raise ValueError
+            seconds = max(0, (stamp - now).total_seconds())
+        except (ValueError, TypeError, OverflowError):
+            raise ProviderError("INVALID_RETRY_AFTER") from None
+    if not math.isfinite(seconds) or seconds < 0:
+        raise ProviderError("INVALID_RETRY_AFTER")
+    return seconds
 
 
 def load_credentials():
@@ -201,8 +221,12 @@ class AlpacaProvider:
         self.cache, self.credentials, self.transport = Path(cache).resolve(), credentials, transport
         self.clock, self.pilot, self.attempts = clock, pilot, attempts
         self.heartbeat = lambda: None
+        self.on_event = lambda event: None
         self.cache.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as db:
+            names = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            if names and names != {"pages"}:
+                raise AtlasError("Foreign Alpaca page-cache schema; migration refused.")
             db.execute(
                 "CREATE TABLE IF NOT EXISTS pages("
                 "id TEXT PRIMARY KEY, payload TEXT NOT NULL, checksum TEXT NOT NULL)"
@@ -215,7 +239,11 @@ class AlpacaProvider:
         return db
 
     def set_heartbeat(self, heartbeat):
-        self.heartbeat = heartbeat
+        def beat():
+            heartbeat()
+            self.on_event({"event": "heartbeat"})
+
+        self.heartbeat = beat
 
     def _request(self, params):
         key, secret = self.credentials()
@@ -235,6 +263,7 @@ class AlpacaProvider:
         try:
             for attempt in range(self.attempts):
                 identity = self.quota.acquire(self.pilot, self.heartbeat)
+                self.on_event({"event": "http_attempt", "retry": attempt > 0})
                 status, backoff, wire = 0, 0, None
                 try:
                     with httpx.Client(
@@ -255,12 +284,11 @@ class AlpacaProvider:
                         ) as response:
                             status = response.status_code
                             if status == 429:
-                                try:
-                                    backoff = float(response.headers.get("Retry-After", "60"))
-                                    if not math.isfinite(backoff) or not 0 <= backoff <= 3600:
-                                        backoff = 60
-                                except ValueError:
-                                    backoff = 60
+                                # Invalid headers stop this page; preserve a conservative cooldown.
+                                backoff = 60
+                                backoff = retry_delay(
+                                    response.headers.get("Retry-After"), self.clock()
+                                )
                             elif status >= 500:
                                 backoff = 2**attempt
                             if status == 200:
@@ -282,6 +310,8 @@ class AlpacaProvider:
                     return wire
                 if status in (401, 403):
                     raise ProviderError("AUTHENTICATION_OR_SIP_ACCESS_DENIED", status=status)
+                if backoff > 300:
+                    raise ProviderError("LONG_RETRY_DELAY_RESUME_LATER", status=status)
                 if (status != 429 and status < 500) or attempt + 1 == self.attempts:
                     raise ProviderError("HISTORICAL_HTTP_FAILURE", status=status)
             raise ProviderError("ATTEMPT_LIMIT")
@@ -368,6 +398,7 @@ class AlpacaProvider:
                     "INSERT INTO pages VALUES(?,?,?)",
                     (identity, encoded, hashlib.sha256(encoded.encode()).hexdigest()),
                 )
+            self.on_event({"event": "page_committed", "bars": total})
             return payload
 
     def fetch_page(self, request, cursor):
