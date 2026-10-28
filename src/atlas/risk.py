@@ -310,3 +310,63 @@ class RiskEngine:
             else:
                 high = middle - 1
         return best
+
+    def evaluate_exit(self, order_id, instrument, quantity, quote, session, rate, now):
+        """Independent long-only disposal gate for simulated held positions only."""
+        with self.ledger.lock:
+            state = self.ledger.snapshot(now)
+            reasons = []
+            position = next((p for p in state.positions if p.instrument == instrument), None)
+            if not state.consistent:
+                reasons.append("SNAPSHOT_INCONSISTENT")
+            if self.kill_switch:
+                reasons.append("KILL_SWITCH")
+            if position is None or quantity > position.quantity:
+                reasons.append("UNSUPPORTED_SHORT_OR_MISSING_POSITION")
+            if not instrument.valid_quantity(quantity):
+                reasons.append("INVALID_QUANTITY")
+            if session is None or not session.contains(now):
+                reasons.append("MARKET_CLOSED")
+            elif self.calendar.session(instrument.venue, session.local_date) != session:
+                reasons.append("CALENDAR_MISMATCH")
+            if (
+                quote.instrument_id != instrument.instrument_id
+                or quote.unit != instrument.quote_unit
+                or not quote.complete
+                or quote.quality
+                or quote.adjustment != Adjustment.RAW
+                or quote.visible_time > now
+                or now - quote.event_time > self.policy.quote_max_age
+                or not instrument.valid_price(quote.bid)
+                or not instrument.valid_price(quote.ask)
+            ):
+                reasons.append("INVALID_OR_STALE_EXIT_QUOTE")
+            if rate is None:
+                reasons.append("MISSING_FX")
+            elif instrument.valid_quantity(quantity):
+                try:
+                    estimate = self.costs.estimate(
+                        instrument,
+                        quantity,
+                        quote.bid,
+                        quote.bid,
+                        rate,
+                        now,
+                        exit_basis=PriceBasis.EXECUTABLE,
+                    )
+                    if estimate.exit_cost_gbp > estimate.exit_notional_gbp:
+                        reasons.append("EXIT_FEES_EXCEED_PROCEEDS")
+                except AtlasError as error:
+                    reasons.append(str(error))
+            return RiskDecision(
+                DecisionStatus.REJECTED if reasons else DecisionStatus.APPROVED,
+                tuple(sorted(set(reasons))),
+                order_id,
+                quantity,
+                ZERO,
+                ZERO,
+                ZERO,
+                self.policy.version,
+                state.version,
+                now,
+            )

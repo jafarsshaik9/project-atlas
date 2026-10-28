@@ -79,7 +79,7 @@ def run(args):
         print(f"Project Atlas: {scheme}://{settings.host}:{settings.port} — SYNTHETIC ONLY")
         print("Stop with Ctrl+C. No firewall, router or public tunnel changes are made.")
         uvicorn.run(
-            create_app(store, settings),
+            create_app(store, settings, paper_db=getattr(args, "paper_db", None)),
             host=settings.host,
             port=settings.port,
             proxy_headers=False,

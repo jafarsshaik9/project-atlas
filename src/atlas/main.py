@@ -9,6 +9,10 @@ from atlas.config import AtlasError, Settings
 
 def main(argv: list[str] | None = None) -> int:
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "paper-session":
+        from atlas.paper_execution.cli import main as paper_session_main
+
+        return paper_session_main(actual[1:])
     if actual and actual[0] == "paper-data":
         from atlas.paper_data.cli import main as paper_data_main
 
@@ -37,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
             "notifications-worker",
             "market-data",
             "paper-data",
+            "paper-session",
         ),
     )
     parser.add_argument("--scenario", default="orb")
@@ -48,6 +53,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cost-config")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--history-db")
+    parser.add_argument("--paper-db", type=Path)
     parser.add_argument("--historical-config", type=Path)
     parser.add_argument("--historical-db", type=Path)
     parser.add_argument("--allow-artificial-historical", action="store_true")

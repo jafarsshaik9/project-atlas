@@ -70,7 +70,12 @@ class BodyLimitMiddleware:
         await self.app(scope, limited_receive, send)
 
 
-def create_app(store: HistoryStore | None = None, settings: DashboardSettings | None = None):
+def create_app(
+    store: HistoryStore | None = None,
+    settings: DashboardSettings | None = None,
+    *,
+    paper_db: Path | None = None,
+):
     store = store if store is not None else HistoryStore()
     settings = settings if settings is not None else DashboardSettings()
     auth, models = DashboardAuth(store), ReadModels(store)
@@ -124,6 +129,15 @@ def create_app(store: HistoryStore | None = None, settings: DashboardSettings | 
         if not auth.valid(request.cookies.get(COOKIE)):
             raise HTTPException(401, "Dashboard login required.")
 
+    @app.get("/api/paper", dependencies=[Depends(authenticated)])
+    def paper_account():
+        if paper_db is None:
+            return {"configured": False, "scope": "ARTIFICIAL_OFFLINE_PAPER"}
+        from atlas.paper_data.store import SchedulerStore
+        from atlas.paper_execution.ledger import report
+
+        return {"configured": True, **report(SchedulerStore(paper_db, read_only=True))}
+
     @app.get("/login")
     def login_page(request: Request):
         return templates.TemplateResponse(
@@ -160,6 +174,10 @@ def create_app(store: HistoryStore | None = None, settings: DashboardSettings | 
         if not auth.valid(request.cookies.get(COOKIE)):
             return RedirectResponse("/login", status_code=303)
         return templates.TemplateResponse(request=request, name="dashboard.html", context={})
+
+    @app.get("/paper", dependencies=[Depends(authenticated)])
+    def paper_page(request: Request):
+        return templates.TemplateResponse(request=request, name="paper.html", context={})
 
     @app.get("/api/runs", response_model=Page[RunView], dependencies=[Depends(authenticated)])
     def runs(limit: int = Query(50, ge=1, le=100), offset: int = Query(0, ge=0, le=1_000_000)):
