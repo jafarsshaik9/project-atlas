@@ -1,5 +1,9 @@
 # Two-year historical collection plan
 
+Update: Alpaca SIP is now the preferred historical planner. See
+[Alpaca integration and replacement dry run](alpaca_historical_integration.md).
+The Massive-specific plan below is retained as the explicit fallback reference.
+
 Planning checkpoint: `37e7e8e4e7829a22784bfd8507e93297b8257848`, branch `main`.
 Planning instant: **2026-10-28 12:00 UTC** (08:00 America/New_York).
 This is an explicit reproducible planning assumption, not an authenticated entitlement test.

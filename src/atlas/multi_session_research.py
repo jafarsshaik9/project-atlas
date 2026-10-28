@@ -130,8 +130,12 @@ def ordered_catalog(refs):
         raise AtlasError("At least one immutable dataset is required.")
     catalog = []
     seen = set()
+    providers = set()
     for ref in refs:
         manifest, request, session = header(ref)
+        providers.add(request.provider)
+        if len(providers) > 1:
+            raise AtlasError("Research runs cannot silently mix historical data providers.")
         key = (request.instrument.instrument_id, session.local_date)
         if key in seen:
             raise AtlasError("Duplicate instrument/session research partition.")

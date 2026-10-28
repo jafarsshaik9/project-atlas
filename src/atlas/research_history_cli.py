@@ -88,6 +88,7 @@ def main(argv=None):
     )
     commands = parser.add_subparsers(dest="command", required=True)
     plan = commands.add_parser("plan")
+    plan.add_argument("--provider", choices=("alpaca", "massive"), default="alpaca")
     plan.add_argument(
         "--as-of", required=True, help="Explicit timezone-aware UTC ISO planning instant"
     )
@@ -105,14 +106,18 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "plan":
-            manifest = plan_collection(
+            from atlas.alpaca_collection import plan_alpaca, write_alpaca_manifest
+
+            planner = plan_alpaca if args.provider == "alpaca" else plan_collection
+            manifest = planner(
                 datetime.fromisoformat(args.as_of),
                 stores=args.store,
                 first=args.first,
                 last=args.last,
                 actions=public_json(args.actions) if args.actions else (),
             )
-            write_manifest(args.output, manifest)
+            writer = write_alpaca_manifest if args.provider == "alpaca" else write_manifest
+            writer(args.output, manifest)
             result = {
                 key: value
                 for key, value in manifest.items()

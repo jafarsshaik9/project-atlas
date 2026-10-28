@@ -302,6 +302,8 @@ def test_dry_run_cli_has_no_network_or_credentials(tmp_path, monkeypatch, capsys
             [
                 "research-history",
                 "plan",
+                "--provider",
+                "massive",
                 "--as-of",
                 AS_OF.isoformat(),
                 "--first",

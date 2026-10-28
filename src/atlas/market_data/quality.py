@@ -63,6 +63,24 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
             issue("MALFORMED_RESPONSE", "Required market metadata/row collection/status is absent.")
             continue
         valid_meta = True
+        if request.provider == "alpaca-sip":
+            from atlas.market_data.alpaca import verify_evidence
+
+            try:
+                if (
+                    page.original_availability != "unknown"
+                    or page.normalization_order != "ascending"
+                ):
+                    raise ValueError
+                verify_evidence(request, body)
+            except (KeyError, ValueError, TypeError):
+                issue("ALPACA_PROVENANCE_MISMATCH", "SIP raw source projection is inconsistent.")
+                valid_meta = False
+            issue(
+                "ALPACA_METADATA_DECLARED",
+                "Research symbol/listing metadata is declared, not dated-reference verified.",
+                "WARNING",
+            )
         if request.provider == "massive":
             from atlas.market_data.massive import verify_evidence
 
@@ -121,6 +139,8 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     if start.tzinfo is None or start.utcoffset() != timedelta(0):
                         raise ValueError
                     timestamp_zone = "UTC (explicit fixture timestamp)"
+                    if request.provider == "alpaca-sip":
+                        timestamp_zone = "UTC (provider RFC3339 bar-start timestamp)"
             except (KeyError, ValueError, TypeError, OverflowError):
                 issue(
                     "INVALID_TIMESTAMP",
@@ -135,11 +155,15 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     "SOURCE_ORDER_VIOLATION",
                     "Page order contradicts the provider's documented convention.",
                 )
-            if request.provider == "massive":
+            if request.provider in ("massive", "alpaca-sip"):
                 if last_massive_start is not None and start <= last_massive_start:
                     issue(
                         "SOURCE_PAGE_ORDER_VIOLATION",
-                        "Massive page sequence overlaps or moves backwards; no repair.",
+                        (
+                            "Massive page sequence overlaps or moves backwards; no repair."
+                            if request.provider == "massive"
+                            else "Alpaca page sequence overlaps or moves backwards; no repair."
+                        ),
                     )
                 last_massive_start = start
             previous = start
