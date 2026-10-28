@@ -297,6 +297,26 @@ def test_iex_pilot_budget_survives_retries(tmp_path, monkeypatch):
     assert quota.attempt_count() == 2
 
 
+def test_empty_iex_session_reports_partition_and_failure_on_resume(tmp_path, monkeypatch):
+    manifest, plan, provider, _, quota = setup_iex(
+        tmp_path,
+        monkeypatch,
+        lambda _: httpx.Response(200, json={"bars": {}, "next_page_token": None}),
+    )
+    for _ in range(2):
+        with pytest.raises(AtlasError) as stopped:
+            cli.run_collection(manifest, plan, provider)
+        message = str(stopped.value)
+        assert f"Partition quarantined: {DAY}/AAPL" in message
+        assert "failures=NO_VALID_BARS" in message
+        assert "valid_bars=0; expected_bars=390" in message
+        assert "dataset_id=" in message
+        assert "Resume stops at this quarantine" in message
+    assert quota.attempt_count() == 1
+    partitions = [row for row in cli.CollectionState(plan["state"]).results() if row["dataset_id"]]
+    assert len(partitions) == 1 and partitions[0]["status"] == "QUARANTINED"
+
+
 def test_observed_iex_pilot_unlocks_only_a_separate_full_approval(tmp_path, monkeypatch):
     def handler(_):
         return httpx.Response(200, json={"bars": {"AAPL": bars(req, count=10)}})

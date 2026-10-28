@@ -1,7 +1,7 @@
 """Offline chronological portfolio replay and time-separated strategy evaluation."""
 
 import json
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, replace
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -146,7 +146,7 @@ def ordered_catalog(refs):
     return sorted(catalog, key=lambda row: row[:2])
 
 
-def run_multi_session(refs, *, orb=None, allow_artificial=False):
+def run_multi_session(refs, *, orb=None, allow_artificial=False, progress=None):
     """One GBP ledger across all symbols/days, with deterministic identity-sorted allocation."""
     catalog = ordered_catalog(refs)
     settings = catalog[0][2].config.settings
@@ -159,6 +159,8 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False):
     origins = set()
     source_rows = selected_rows = 0
     source_proofs = []
+    strategy_reasons = Counter()
+    strategy_sessions = []
     # Only one day's observations reside in the event queue, rather than two years of ticks.
     for day, group in groupby(catalog, key=lambda row: row[0]):
         day_rows = list(group)
@@ -180,6 +182,8 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False):
             events.extend((q.visible_time, 1, key, i, q) for i, q in enumerate(d["quotes"]))
         events.sort(key=lambda row: row[:4])
         before = ledger.snapshot(min(d["session"].open for d in data))
+        day_reasons = defaultdict(Counter)
+        day_signals = Counter()
         for now, simultaneous in groupby(events, key=lambda row: row[0]):
             batch = list(simultaneous)
             quotes = [row for row in batch if row[1] == 1]
@@ -251,7 +255,10 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False):
                 result = strategies[key].evaluate(
                     d["instrument"], tuple(visible[key]), d["session"], now
                 )
+                strategy_reasons.update(result.reasons)
+                day_reasons[key].update(result.reasons)
                 if result.signal and result.signal.intent_id not in identified:
+                    day_signals[key] += 1
                     identified.add(result.signal.intent_id)
                     pending[key] = result.signal
             for _, _, key, ordinal, quote in quotes:
@@ -343,6 +350,25 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False):
                 "hypotheses": len(identified),
             }
         )
+        strategy_sessions.extend(
+            {
+                "date": str(day),
+                "instrument_id": key,
+                "signals": day_signals[key],
+                "reasons": dict(day_reasons[key]),
+                "derived_candles": len(d["bars"]),
+            }
+            for key, d in contexts.items()
+        )
+        if progress is not None:
+            progress(
+                {
+                    "date": str(day),
+                    "completed_sessions": len(sessions_report),
+                    "equity_gbp": str(final.equity_gbp),
+                    "fills": len(ledger.history),
+                }
+            )
     exits = defaultdict(lambda: ZERO)
     for fill in ledger.history:
         if fill.side == "sell":
@@ -406,6 +432,8 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False):
             "fills": ledger.history,
             "risk_decisions": decisions,
             "rejections": rejected,
+            "strategy_reason_counts": dict(strategy_reasons),
+            "strategy_sessions": strategy_sessions,
             "reconciled": final.consistent,
             "assumptions": [
                 "NO_SURVIVORSHIP_FREE_UNIVERSE_CLAIM",

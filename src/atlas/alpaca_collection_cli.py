@@ -15,6 +15,7 @@ from zoneinfo import ZoneInfo
 import httpx
 
 from atlas.alpaca_collection import plan_alpaca
+from atlas.alpaca_exclusions import load_exclusion
 from atlas.config import AtlasError
 from atlas.market_data.alpaca import UNIVERSE, AlpacaProvider, feed_for, instrument
 from atlas.market_data.alpaca_limits import DEFAULT_QUOTA, AlpacaQuota
@@ -245,7 +246,13 @@ def preflight(manifest, plan, now):
 
 
 def run_collection(
-    manifest, plan, provider, *, progress=lambda event: None, permission_record=None
+    manifest,
+    plan,
+    provider,
+    *,
+    progress=lambda event: None,
+    permission_record=None,
+    exclusion_record=None,
 ):
     """Programmatic callers share the CLI permission gate and worker lock."""
     validate_manifest(manifest, pilot=plan.get("mode") == "pilot")
@@ -256,10 +263,15 @@ def run_collection(
                 raise AtlasError("Real collection requires the shared quota and native transport.")
             preflight(manifest, plan, datetime.now(UTC))
             check_permission(permission_record or "", manifest, plan, datetime.now(UTC))
-        return _collect_locked(manifest, plan, provider, progress=progress)
+        return _collect_locked(
+            manifest, plan, provider, progress=progress, exclusion_record=exclusion_record
+        )
 
 
-def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
+def _collect_locked(
+    manifest, plan, provider, *, progress=lambda event: None, exclusion_record=None
+):
+    exclusion = load_exclusion(exclusion_record, manifest, plan)
     if (
         manifest["provider"] == "alpaca-iex"
         and plan.get("mode") == "pilot"
@@ -297,6 +309,12 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
         if saved["definition"] != definition:
             raise AtlasError("Collection state policy drift.")
     stats = json.loads(saved["identity"])
+    exclusion_id = exclusion["record_id"] if exclusion else None
+    if "exclusion_id" in stats and stats["exclusion_id"] != exclusion_id:
+        raise AtlasError("Resume requires the same approved session exclusion record.")
+    if exclusion:
+        stats["exclusion_id"] = exclusion_id
+        state.checkpoint(run_key, identity=json.dumps(stats))
     started, previous_elapsed = time.monotonic(), stats["elapsed"]
     downloaded = 0
     with provider.connect() as db:
@@ -312,7 +330,12 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
         state.checkpoint(run_key, identity=json.dumps(stats))
         accepted = sum(r["state"] in ("ACCEPTED", "REUSED") for r in results)
         quarantined = sum(r["state"] == "QUARANTINED" for r in results)
+        excluded = sum(r["state"] == "EXCLUDED" for r in results)
         done = {(r["date"], r["symbol"]) for r in results if r["state"] in ("ACCEPTED", "REUSED")}
+        gaps = {(r["date"], r["symbol"]) for r in results if r["state"] == "EXCLUDED"}
+        excluded_days = sum(
+            all((t["date"], s) in gaps for s in t["symbols"]) for t in manifest["tasks"]
+        )
         completed_days = sum(
             all((t["date"], s) in done for s in t["symbols"]) for t in manifest["tasks"]
         )
@@ -320,7 +343,10 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
             {
                 "event": "progress",
                 "completed_sessions": completed_days,
-                "remaining_sessions": len(manifest["tasks"]) - completed_days,
+                "remaining_sessions": len(manifest["tasks"]) - completed_days - excluded_days,
+                "excluded_sessions": excluded_days,
+                "excluded_partitions": excluded,
+                "coverage_complete": not bool(exclusion),
                 "completed_symbols": sum(
                     all((t["date"], s) in done for t in manifest["tasks"])
                     for s in manifest["symbols"]
@@ -330,15 +356,16 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
                 "bars_downloaded": downloaded,
                 "accepted_partitions": accepted,
                 "reused_partitions": sum(r["state"] == "REUSED" for r in results),
-                "quarantined_partitions": quarantined,
+                "quarantined_partitions": quarantined + excluded,
+                "unresolved_quarantined_partitions": quarantined,
                 "api_requests_consumed": provider.quota.attempt_count() - stats["initial_attempts"],
                 "account_api_requests_total": provider.quota.attempt_count(),
                 "retries": stats["retries"],
                 "elapsed_seconds": round(stats["elapsed"], 2),
                 "estimated_remaining_seconds": round(
-                    stats["elapsed"] * (total - accepted) / accepted, 2
+                    stats["elapsed"] * (total - accepted - excluded) / (accepted + excluded), 2
                 )
-                if accepted
+                if accepted + excluded
                 else None,
             }
         )
@@ -371,9 +398,60 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
             row = rows[identity]
             if json.loads(row["definition"]) != {"run": plan["run_id"], "partition": key}:
                 raise AtlasError("Partition checkpoint definition drift.")
+            if exclusion and task["date"] == exclusion["date"]:
+                ref = exclusion["evidence"][symbol]
+                if row["status"] in ("ACCEPTED", "REUSED") or key in plan["reuse"]:
+                    raise AtlasError(
+                        "An accepted partition cannot be replaced by a session exclusion."
+                    )
+                if row["status"] in ("QUARANTINED", "EXCLUDED"):
+                    proof, quality, bars = HistoricalStore(row["store"], read_only=True).inspect(
+                        row["dataset_id"]
+                    )
+                    if (
+                        proof["state"] != "QUARANTINED"
+                        or bars
+                        or quality.raw_rows
+                        or {f.code for f in quality.findings if f.severity == "FAIL"}
+                        != {"NO_VALID_BARS"}
+                        or DownloadRequest.model_validate(proof["request"])
+                        != partition_request(task, symbol)
+                        or proof["calendar"] != task["calendar"]
+                        or digest(proof) != row["identity"]
+                        or (row["status"] == "EXCLUDED" and row["code"] != exclusion_id)
+                    ):
+                        raise AtlasError("Excluded partition evidence differs from its checkpoint.")
+                    # Preserve the original quarantine checkpoint and immutable dataset.
+                    state.checkpoint(identity, code=exclusion_id)
+                elif row["status"] == "PENDING":
+                    state.checkpoint(
+                        identity,
+                        status="EXCLUDED",
+                        dataset_id=ref["dataset_id"],
+                        store=str(local_path(ref["store"])),
+                        identity=ref["checksum"],
+                        code=exclusion_id,
+                    )
+                else:
+                    raise AtlasError("Unresolved partition state cannot be silently excluded.")
+                results.append(
+                    {
+                        "date": task["date"],
+                        "symbol": symbol,
+                        "state": "EXCLUDED",
+                        "dataset_id": row["dataset_id"] or ref["dataset_id"],
+                        "store": row["store"] or str(local_path(ref["store"])),
+                        "bars": 0,
+                        "exclusion_id": exclusion_id,
+                    }
+                )
+                emit()
+                continue
+            if row["status"] == "EXCLUDED":
+                raise AtlasError("Excluded partition requires its approved exclusion record.")
             try:
                 if row["status"] in ("ACCEPTED", "REUSED", "QUARANTINED"):
-                    proof, _, bars = HistoricalStore(row["store"], read_only=True).inspect(
+                    proof, quality, bars = HistoricalStore(row["store"], read_only=True).inspect(
                         row["dataset_id"]
                     )
                     if proof["state"] != (
@@ -390,7 +468,7 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
                     status, dataset, source = row["status"], row["dataset_id"], row["store"]
                 elif key in plan["reuse"]:
                     ref = plan["reuse"][key]
-                    proof, _, bars = inspect_partition(
+                    proof, quality, bars = inspect_partition(
                         ref["store"], ref["dataset_id"], task, symbol
                     )
                     if digest(proof) != ref["checksum"]:
@@ -401,7 +479,7 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
                     dataset, job, _ = download(
                         provider, request, RecordedCalendar(task["calendar"]), store
                     )
-                    proof, _, bars = store.inspect(dataset)
+                    proof, quality, bars = store.inspect(dataset)
                     status, source = proof["state"], str(store.path)
                     state.checkpoint(identity, job_id=job)
                 state.checkpoint(
@@ -424,7 +502,15 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
                 )
                 emit()
                 if status == "QUARANTINED":
-                    raise AtlasError("Partition quarantined; collection stopped without repair.")
+                    failures = ", ".join(
+                        finding.code for finding in quality.findings if finding.severity == "FAIL"
+                    )
+                    raise AtlasError(
+                        f"Partition quarantined: {key}; failures={failures}; "
+                        f"valid_bars={quality.valid_bars}; expected_bars={quality.expected_bars}; "
+                        f"dataset_id={dataset}. Accepted partitions are preserved. "
+                        "Resume stops at this quarantine until it is explicitly resolved."
+                    )
             except (AtlasError, ValueError, OSError) as error:
                 if rows[identity]["status"] not in ("ACCEPTED", "REUSED", "QUARANTINED"):
                     # Preserve any quarantined checkpoint already committed above.
@@ -435,7 +521,7 @@ def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
                         )
                 emit()
                 raise error
-    state.checkpoint(run_key, status="COMPLETED")
+    state.checkpoint(run_key, status="COMPLETED_WITH_GAPS" if exclusion else "COMPLETED")
     return results
 
 
@@ -453,6 +539,10 @@ def main(argv=None):
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--permission-record")
+    parser.add_argument(
+        "--exclusion-record",
+        help="Reviewed empty-session exclusion; grants no execution permission",
+    )
     args = parser.parse_args(argv)
     try:
         manifest = validate_manifest(public_json(local_path(args.manifest)), pilot=args.pilot)
@@ -521,6 +611,7 @@ def main(argv=None):
         now = datetime.now(UTC)
         free = preflight(manifest, plan, now)
         with exclusive_worker(ROOT / "local/market-data/alpaca-collection.lock"):
+            exclusion = load_exclusion(args.exclusion_record, manifest, plan)
             if not args.execute:
                 from atlas.alpaca_iex_approval import readiness_state
 
@@ -535,12 +626,17 @@ def main(argv=None):
                             if feed == "iex"
                             else "NOT_APPLICABLE",
                             "network_enabled": False,
+                            "approved_excluded_dates": [exclusion["date"]] if exclusion else [],
+                            "coverage_complete": exclusion is None,
                             "run_id": plan["run_id"],
                             "run_plan": str(plan_path),
                             "reused_partitions": len(plan["reuse"]),
                             "reuse": plan["reuse"],
                             "expected_initial_requests": sum(
-                                any(t["date"] + "/" + s not in plan["reuse"] for s in t["symbols"])
+                                (not exclusion or t["date"] != exclusion["date"])
+                                and any(
+                                    t["date"] + "/" + s not in plan["reuse"] for s in t["symbols"]
+                                )
                                 for t in manifest["tasks"]
                             ),
                             "request_count_is_not_a_cap": True,
@@ -583,12 +679,22 @@ def main(argv=None):
                 plan,
                 provider,
                 progress=lambda event: print(json.dumps(event, sort_keys=True), flush=True),
+                exclusion_record=args.exclusion_record,
             )
             if feed == "iex" and args.pilot:
                 from atlas.alpaca_iex_approval import record_pilot_access
 
                 record_pilot_access(manifest, plan, results, quota, pilot_id)
-            print(json.dumps({"status": "COMPLETED", "partitions": len(results)}))
+            print(
+                json.dumps(
+                    {
+                        "status": "COMPLETED_WITH_GAPS" if exclusion else "COMPLETED",
+                        "partitions": len(results),
+                        "excluded_partitions": sum(r["state"] == "EXCLUDED" for r in results),
+                        "coverage_complete": exclusion is None,
+                    }
+                )
+            )
             return 0
     except KeyboardInterrupt:
         print(
