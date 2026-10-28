@@ -125,6 +125,7 @@ class CandlePlan(Contract):
     page_minutes: int = Field(default=5000, strict=True, ge=1, le=5000)
     granularity: Literal["M1"] = "M1"
     smooth: Literal[False] = False
+    empty_policy: Literal["QUARANTINE", "DOCUMENTED_CLOSURE_ASSUMPTION"] = "QUARANTINE"
     schedule_status: Literal["UNVERIFIED_NO_GAP_CLASSIFICATION"] = (
         "UNVERIFIED_NO_GAP_CLASSIFICATION"
     )
@@ -139,6 +140,11 @@ class CandlePlan(Contract):
             raise ValueError("Historical interval must be minute aligned.")
         if self.end - self.start > timedelta(days=366 * 3):
             raise ValueError("Partition range exceeds research bound.")
+        if self.empty_policy != "QUARANTINE":
+            from atlas.forex.quality import open_minutes
+
+            if self.end - self.start > timedelta(days=1) or open_minutes(self.start, self.end):
+                raise ValueError("Empty policy requires an entirely documented closure window.")
         return self
 
 

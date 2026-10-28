@@ -24,6 +24,13 @@ def write_new(path, value):
 
 
 def main(argv=None):
+    import sys
+
+    actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "history":
+        from atlas.forex.collection_cli import main as history_main
+
+        return history_main(actual[1:])
     parser = argparse.ArgumentParser(description="OANDA read-only research; offline by default")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("validate", help="Offline scoped configuration validation; no network")

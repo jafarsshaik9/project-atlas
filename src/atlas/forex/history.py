@@ -107,7 +107,7 @@ class ForexStore:
                     raise AtlasError("FOREX_PLAN_CHANGED")
                 self._pages(db, job, plan, count)
                 if status == "ACCEPTED":
-                    self.inspect(dataset)
+                    self.inspect(dataset, check_database=False)
                     return dataset
                 if status == "QUARANTINED":
                     raise AtlasError("FOREX_PARTITION_QUARANTINED_REVIEW_REQUIRED")
@@ -140,7 +140,9 @@ class ForexStore:
                         checkpoint_hook()
                 else:
                     bars, hashes = self._pages(db, job, plan, count)
-                    if not bars or any(not b.complete for b in bars):
+                    if (not bars and plan.empty_policy == "QUARANTINE") or any(
+                        not b.complete for b in bars
+                    ):
                         db.execute("UPDATE fx_jobs SET status='QUARANTINED' WHERE id=?", (job,))
                         failed = True
                     else:
@@ -176,9 +178,9 @@ class ForexStore:
             ],
         }
 
-    def inspect(self, dataset):
+    def inspect(self, dataset, *, check_database=True):
         with self.connect() as db:
-            if db.execute("PRAGMA quick_check").fetchone()[0] != "ok":
+            if check_database and db.execute("PRAGMA quick_check").fetchone()[0] != "ok":
                 raise AtlasError("FOREX_STORE_CORRUPT")
             row = db.execute(
                 "SELECT job,manifest,checksum FROM fx_datasets WHERE id=?", (dataset,)
@@ -204,7 +206,7 @@ class ForexStore:
                     raise ValueError
                 bars, hashes = self._pages(db, job, plan, count)
                 if (
-                    not bars
+                    (not bars and plan.empty_policy == "QUARANTINE")
                     or any(not b.complete for b in bars)
                     or manifest != self._manifest(plan, hashes, bars)
                 ):

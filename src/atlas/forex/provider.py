@@ -79,6 +79,12 @@ class ReadOnlyTransport(httpx.BaseTransport):
         if len(pairs) != len(params):
             raise AtlasError("OANDA_QUERY_NOT_ALLOWLISTED")
         if (
+            self._permit.allowed_requests is not None
+            and (url.path, params.get("from", ""), params.get("to", ""), params.get("price", ""))
+            not in self._permit.allowed_requests
+        ):
+            raise AtlasError("OANDA_REQUEST_OUTSIDE_APPROVED_PLAN")
+        if (
             url.path == "/v3/accounts"
             and self._permit.scope in ("accounts", "accounts-instruments")
             and not params

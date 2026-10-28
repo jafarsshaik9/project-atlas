@@ -22,6 +22,7 @@ class Permit:
     scope: str
     maximum_attempts: int
     expires: float
+    allowed_requests: frozenset[tuple[str, str, str, str]] | None = None
 
 
 def phrase(environment, scope):
