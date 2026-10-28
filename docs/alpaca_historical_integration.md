@@ -1,6 +1,7 @@
 # Alpaca historical SIP integration
 
-Alpaca is the preferred historical planner. Massive remains available with
+New planning now defaults to explicit IEX; see [IEX workflow](alpaca_iex_collection.md).
+This document records the preserved SIP integration. Massive remains available with
 `research-history plan --provider massive`; it is never an automatic fallback.
 Existing strategies, risk rules, accounting, dashboard and notification paths are unchanged.
 
@@ -29,7 +30,7 @@ The existing `ALPACA_ENDPOINT` is neither read nor changed.
 Generated without credentials or network using:
 
 ```powershell
-.venv/Scripts/python.exe -m atlas.main research-history plan --as-of 2026-10-28T12:00:00+00:00 --first 2024-10-28 --last 2026-10-27 --output local/research/two-year/alpaca-dry-run-manifest.json --json
+.venv/Scripts/python.exe -m atlas.main research-history plan --provider alpaca --as-of 2026-10-28T12:00:00+00:00 --first 2024-10-28 --last 2026-10-27 --output local/research/two-year/alpaca-dry-run-manifest.json --json
 ```
 
 The ignored local manifest lists each proposed URL, query, exchange-calendar proof

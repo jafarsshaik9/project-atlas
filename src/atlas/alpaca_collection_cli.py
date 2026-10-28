@@ -16,7 +16,7 @@ import httpx
 
 from atlas.alpaca_collection import plan_alpaca
 from atlas.config import AtlasError
-from atlas.market_data.alpaca import UNIVERSE, AlpacaProvider, instrument
+from atlas.market_data.alpaca import UNIVERSE, AlpacaProvider, feed_for, instrument
 from atlas.market_data.alpaca_limits import DEFAULT_QUOTA, AlpacaQuota
 from atlas.market_data.calendars import RecordedCalendar
 from atlas.market_data.contracts import DownloadRequest, digest
@@ -45,31 +45,50 @@ def local_path(path):
     return resolved
 
 
-def validate_manifest(manifest):
+def validate_manifest(manifest, *, pilot=False):
     expected = plan_alpaca(
         datetime.fromisoformat(manifest["as_of"]),
         first=datetime.fromisoformat(manifest["first"]).date(),
         last=datetime.fromisoformat(manifest["last"]).date(),
         symbols=tuple(manifest["symbols"]),
+        feed=feed_for(manifest["provider"]),
     )
-    if expected != manifest or set(manifest["symbols"]) != set(UNIVERSE):
+    scope_ok = (
+        (
+            manifest["provider"] == "alpaca-iex"
+            and manifest["symbols"] == ["AAPL"]
+            and len(manifest["tasks"]) == 1
+        )
+        if pilot
+        else set(manifest["symbols"]) == set(UNIVERSE)
+    )
+    if expected != manifest or not scope_ok:
         raise AtlasError("Frozen five-symbol Alpaca manifest is inconsistent.")
     return manifest
 
 
 def partition_request(task, symbol):
     start, end = datetime.fromisoformat(task["start"]), datetime.fromisoformat(task["end"])
+    feed = task["requests"][0]["parameters"]["feed"]
     return DownloadRequest(
-        provider="alpaca-sip", instrument=instrument(symbol, start, end), start=start, end=end
+        provider="alpaca-" + feed,
+        instrument=instrument(symbol, start, end, feed=feed),
+        start=start,
+        end=end,
     )
 
 
-def inspect_partition(path, identity, task=None, symbol=None):
+def inspect_partition(path, identity, task=None, symbol=None, *, expected_feed=None):
     manifest, quality, bars = HistoricalStore(path, read_only=True).inspect(identity)
     request = DownloadRequest.model_validate(manifest["request"])
-    if manifest["state"] != "ACCEPTED" or request.provider != "alpaca-sip":
+    if manifest["state"] != "ACCEPTED" or request.provider not in ("alpaca-sip", "alpaca-iex"):
         raise AtlasError("Reuse requires an accepted Alpaca partition; provider mixing refused.")
-    if manifest["provider_descriptor"] != AlpacaProvider.descriptor.model_dump(mode="json"):
+    feed = feed_for(request.provider)
+    if expected_feed is not None and feed != expected_feed:
+        raise AtlasError("SIP and IEX partitions cannot be mixed or relabelled.")
+    if manifest["provider_descriptor"] != AlpacaProvider.descriptor_for(feed).model_dump(
+        mode="json"
+    ):
         raise AtlasError("Existing Alpaca provider policy differs from this collector.")
     if task is not None and (
         request != partition_request(task, symbol) or manifest["calendar"] != task["calendar"]
@@ -86,9 +105,11 @@ def reuse_inventory(paths, manifest):
         with store.connect() as db:
             identities = [r[0] for r in db.execute("SELECT dataset_id FROM md_datasets")]
         for identity in identities:
-            proof, _, bars = inspect_partition(path, identity)
+            proof, _, bars = inspect_partition(
+                path, identity, expected_feed=feed_for(manifest["provider"])
+            )
             req = DownloadRequest.model_validate(proof["request"])
-            symbol = req.instrument.mapping("alpaca-sip", req.start, req.end).symbol
+            symbol = req.instrument.mapping(req.provider, req.start, req.end).symbol
             day = req.start.astimezone(ZoneInfo("America/New_York")).date()
             key = (str(day), symbol)
             if key not in wanted:
@@ -111,13 +132,22 @@ def verify_run_plan(plan, manifest):
     identity = copy.pop("run_id")
     if digest(copy) != identity or plan["manifest_id"] != manifest["manifest_id"]:
         raise AtlasError("Collection run plan checksum or manifest binding failed.")
-    if plan["repository"] != str(ROOT.resolve()) or plan["schema"] != 1:
+    feed = feed_for(manifest["provider"])
+    if plan["repository"] != str(ROOT.resolve()) or plan["schema"] != (2 if feed == "iex" else 1):
         raise AtlasError("Collection run plan belongs to another repository.")
+    if feed == "iex" and (plan.get("feed") != "iex" or plan.get("mode") not in ("pilot", "full")):
+        raise AtlasError("IEX plan must bind its feed and execution scope.")
     for name in ("store", "state", "cache"):
         if str(local_path(plan[name])) != plan[name] or Path(plan[name]).suffix != ".sqlite3":
             raise AtlasError("Collection run plan has an unsafe runtime path.")
         if Path(plan[name]) == DEFAULT_QUOTA.resolve():
             raise AtlasError("Collection runtime files cannot replace the account quota.")
+        if feed == "iex" and not Path(plan[name]).is_relative_to(
+            (ROOT / "local/market-data/alpaca-iex" / plan["mode"]).resolve()
+        ):
+            raise AtlasError(
+                "IEX runtime files must remain in their separate feed/scope directory."
+            )
     if len({plan[k] for k in ("store", "state", "cache")}) != 3:
         raise AtlasError("Collection databases must be separate.")
     tasks = {t["date"]: t for t in manifest["tasks"]}
@@ -134,6 +164,10 @@ def verify_run_plan(plan, manifest):
 
 
 def check_permission(path, manifest, run_plan, now):
+    if manifest["provider"] == "alpaca-iex":
+        from atlas.alpaca_iex_approval import check_iex_permission
+
+        return check_iex_permission(path, manifest, run_plan, now)
     if not Path(path).is_file():
         raise AtlasError(
             "ACCOUNT_PERMISSIONS_UNVERIFIED: separate user confirmation record required."
@@ -184,7 +218,7 @@ def preflight(manifest, plan, now):
     if any(
         datetime.fromisoformat(t["end"]) > now - timedelta(minutes=15) for t in manifest["tasks"]
     ):
-        raise AtlasError("Historical SIP session is not yet eligible.")
+        raise AtlasError("Historical session is not yet eligible.")
     required = manifest["estimated_storage_bytes"]["high"] * 2 + 1_000_000_000
     available = shutil.disk_usage(ROOT).free
     if available < required:
@@ -193,7 +227,7 @@ def preflight(manifest, plan, now):
         target = HistoricalStore(plan["store"], read_only=True)
         with target.connect() as db:
             for row in db.execute("SELECT request_json FROM md_jobs"):
-                if json.loads(row[0])["provider"] != "alpaca-sip":
+                if json.loads(row[0])["provider"] != manifest["provider"]:
                     raise AtlasError("Target store contains another provider; mixing refused.")
     if DEFAULT_QUOTA.exists():
         with sqlite3.connect(DEFAULT_QUOTA.resolve().as_uri() + "?mode=ro", uri=True) as db:
@@ -214,7 +248,7 @@ def run_collection(
     manifest, plan, provider, *, progress=lambda event: None, permission_record=None
 ):
     """Programmatic callers share the CLI permission gate and worker lock."""
-    validate_manifest(manifest)
+    validate_manifest(manifest, pilot=plan.get("mode") == "pilot")
     verify_run_plan(plan, manifest)
     with exclusive_worker(ROOT / "local/market-data/alpaca-collection.lock"):
         if not isinstance(provider.transport, httpx.MockTransport):
@@ -227,7 +261,15 @@ def run_collection(
 
 def _collect_locked(manifest, plan, provider, *, progress=lambda event: None):
     if (
+        manifest["provider"] == "alpaca-iex"
+        and plan.get("mode") == "pilot"
+        and not isinstance(provider.transport, httpx.MockTransport)
+        and provider.pilot != "iex-pilot-" + plan["run_id"]
+    ):
+        raise AtlasError("IEX pilot requires its persistent two-attempt budget.")
+    if (
         type(provider) is not AlpacaProvider
+        or provider.descriptor.provider_id != manifest["provider"]
         or tuple(provider.symbols) != tuple(manifest["symbols"])
         or provider.cache != Path(plan["cache"]).resolve()
     ):
@@ -402,19 +444,44 @@ def main(argv=None):
         description="Alpaca collection: dry-run unless --execute AND confirmed permissions"
     )
     parser.add_argument("--manifest", required=True)
-    parser.add_argument("--run-plan", default="local/research/two-year/alpaca-run-plan.json")
+    parser.add_argument("--run-plan")
+    parser.add_argument("--feed", choices=("sip", "iex"))
+    parser.add_argument(
+        "--pilot", action="store_true", help="IEX: one AAPL session, lifetime cap two HTTP attempts"
+    )
     parser.add_argument("--reuse-store", action="append", default=[])
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--resume", action="store_true")
-    parser.add_argument(
-        "--permission-record", default="local/research/two-year/alpaca-account-permissions.json"
-    )
+    parser.add_argument("--permission-record")
     args = parser.parse_args(argv)
     try:
-        manifest = validate_manifest(public_json(local_path(args.manifest)))
-        plan_path = local_path(args.run_plan)
+        manifest = validate_manifest(public_json(local_path(args.manifest)), pilot=args.pilot)
+        feed = feed_for(manifest["provider"])
+        if args.feed is not None and args.feed != feed:
+            raise AtlasError(
+                "Selected feed conflicts with frozen manifest; create a separate manifest."
+            )
+        mode = "pilot" if args.pilot else "full"
+        plan_path = local_path(
+            args.run_plan
+            or (
+                f"local/research/two-year/iex-{mode}-run-plan.json"
+                if feed == "iex"
+                else "local/research/two-year/alpaca-run-plan.json"
+            )
+        )
+        permission_path = local_path(
+            args.permission_record
+            or (
+                f"local/research/two-year/iex-{mode}-approval.json"
+                if feed == "iex"
+                else "local/research/two-year/alpaca-account-permissions.json"
+            )
+        )
         if plan_path.exists():
             plan = verify_run_plan(public_json(plan_path), manifest)
+            if feed == "iex" and plan["mode"] != mode:
+                raise AtlasError("Pilot/full plan scope mismatch.")
             if args.reuse_store:
                 raise AtlasError(
                     "Reuse inventory is frozen; existing run plans do not accept new stores."
@@ -423,10 +490,18 @@ def main(argv=None):
             if args.execute or args.resume:
                 raise AtlasError("Create and review a dry-run plan before execution/resume.")
             sources = [local_path(p) for p in args.reuse_store]
-            pilot = ROOT / "local/market-data/alpaca-pilot/historical.sqlite3"
-            if pilot.is_file() and not sources:
+            pilot = ROOT / (
+                "local/market-data/alpaca-iex/pilot/historical.sqlite3"
+                if feed == "iex"
+                else "local/market-data/alpaca-pilot/historical.sqlite3"
+            )
+            if pilot.is_file() and not sources and not args.pilot:
                 sources.append(pilot)
-            base = ROOT / "local/market-data/alpaca-full"
+            base = ROOT / (
+                f"local/market-data/alpaca-iex/{mode}"
+                if feed == "iex"
+                else "local/market-data/alpaca-full"
+            )
             plan = {
                 "schema": 1,
                 "repository": str(ROOT.resolve()),
@@ -436,6 +511,8 @@ def main(argv=None):
                 "cache": str(base / "pages.sqlite3"),
                 "reuse": reuse_inventory(sources, manifest),
             }
+            if feed == "iex":
+                plan.update(schema=2, feed="iex", mode=mode)
             plan["run_id"] = digest(plan)
             verify_run_plan(plan, manifest)
             plan_path.parent.mkdir(parents=True, exist_ok=True)
@@ -445,11 +522,18 @@ def main(argv=None):
         free = preflight(manifest, plan, now)
         with exclusive_worker(ROOT / "local/market-data/alpaca-collection.lock"):
             if not args.execute:
+                from atlas.alpaca_iex_approval import readiness_state
+
                 print(
                     json.dumps(
                         {
                             "status": "DRY_RUN",
                             "account_permissions": "UNVERIFIED",
+                            "feed": feed,
+                            "execution_scope": mode,
+                            "iex_entitlement": "DOCUMENTED_FOR_BASIC; ACCOUNT_UNTESTED"
+                            if feed == "iex"
+                            else "NOT_APPLICABLE",
                             "network_enabled": False,
                             "run_id": plan["run_id"],
                             "run_plan": str(plan_path),
@@ -461,6 +545,8 @@ def main(argv=None):
                             ),
                             "request_count_is_not_a_cap": True,
                             "expected_bars": manifest["expected_minute_bars"],
+                            "bar_count_is_upper_bound": feed == "iex",
+                            **(readiness_state() if feed == "iex" else {}),
                             "disk_free_bytes": free,
                             "worker_lock_available": True,
                         },
@@ -468,16 +554,28 @@ def main(argv=None):
                     )
                 )
                 return 0
-            check_permission(local_path(args.permission_record), manifest, plan, now)
+            check_permission(permission_path, manifest, plan, now)
             if Path(plan["state"]).exists() and not args.resume:
                 raise AtlasError("Existing collection checkpoints require explicit --resume.")
             if args.resume and not Path(plan["state"]).exists():
                 raise AtlasError("No collection checkpoints exist to resume.")
+            quota = AlpacaQuota()
+            pilot_id = None
+            if feed == "iex" and args.pilot:
+                pilot_id = "iex-pilot-" + plan["run_id"]
+                with quota.connect() as db:
+                    exists = db.execute(
+                        "SELECT used FROM pilots WHERE id=?", (pilot_id,)
+                    ).fetchone()
+                if exists is None:
+                    quota.start_pilot(pilot_id)
             provider = AlpacaProvider(
                 symbols=tuple(manifest["symbols"]),
-                quota=AlpacaQuota(),
+                quota=quota,
                 cache=plan["cache"],
                 allow_network=True,
+                feed=feed,
+                pilot=pilot_id,
             )
             preflight(manifest, plan, datetime.now(UTC))
             results = _collect_locked(
@@ -486,6 +584,10 @@ def main(argv=None):
                 provider,
                 progress=lambda event: print(json.dumps(event, sort_keys=True), flush=True),
             )
+            if feed == "iex" and args.pilot:
+                from atlas.alpaca_iex_approval import record_pilot_access
+
+                record_pilot_access(manifest, plan, results, quota, pilot_id)
             print(json.dumps({"status": "COMPLETED", "partitions": len(results)}))
             return 0
     except KeyboardInterrupt:

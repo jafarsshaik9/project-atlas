@@ -63,7 +63,7 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
             issue("MALFORMED_RESPONSE", "Required market metadata/row collection/status is absent.")
             continue
         valid_meta = True
-        if request.provider == "alpaca-sip":
+        if request.provider in ("alpaca-sip", "alpaca-iex"):
             from atlas.market_data.alpaca import verify_evidence
 
             try:
@@ -74,7 +74,12 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     raise ValueError
                 verify_evidence(request, body)
             except (KeyError, ValueError, TypeError):
-                issue("ALPACA_PROVENANCE_MISMATCH", "SIP raw source projection is inconsistent.")
+                issue(
+                    "ALPACA_PROVENANCE_MISMATCH",
+                    "SIP raw source projection is inconsistent."
+                    if request.provider == "alpaca-sip"
+                    else "IEX raw source projection is inconsistent.",
+                )
                 valid_meta = False
             issue(
                 "ALPACA_METADATA_DECLARED",
@@ -139,7 +144,7 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     if start.tzinfo is None or start.utcoffset() != timedelta(0):
                         raise ValueError
                     timestamp_zone = "UTC (explicit fixture timestamp)"
-                    if request.provider == "alpaca-sip":
+                    if request.provider in ("alpaca-sip", "alpaca-iex"):
                         timestamp_zone = "UTC (provider RFC3339 bar-start timestamp)"
             except (KeyError, ValueError, TypeError, OverflowError):
                 issue(
@@ -155,7 +160,7 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
                     "SOURCE_ORDER_VIOLATION",
                     "Page order contradicts the provider's documented convention.",
                 )
-            if request.provider in ("massive", "alpaca-sip"):
+            if request.provider in ("massive", "alpaca-sip", "alpaca-iex"):
                 if last_massive_start is not None and start <= last_massive_start:
                     issue(
                         "SOURCE_PAGE_ORDER_VIOLATION",
@@ -258,8 +263,15 @@ def assess(request, pages, calendar, *, actions=(), action_coverage="UNKNOWN", h
     issue(
         "MISSING_INTERVALS",
         "Expected regular-session intervals have no valid source bar; no interpolation.",
+        "WARNING" if request.provider == "alpaca-iex" else "FAIL",
         count=len(expected - set(actual)),
     )
+    if request.provider == "alpaca-iex":
+        issue(
+            "IEX_LIMITED_COVERAGE",
+            "IEX-only prices/volume are not consolidated SIP; absent minutes remain unknown.",
+            "WARNING",
+        )
     issue(
         "OUT_OF_SESSION",
         "Bars fall outside reviewed regular cash-equity sessions.",

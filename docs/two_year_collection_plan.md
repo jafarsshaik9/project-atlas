@@ -1,7 +1,9 @@
 # Two-year historical collection plan
 
-Update: Alpaca SIP is now the preferred historical planner. See
-[Alpaca integration and replacement dry run](alpaca_historical_integration.md).
+Update: free Alpaca IEX is now the preferred new historical planner. See
+[separate IEX configuration and approval workflow](alpaca_iex_collection.md).
+Existing SIP artifacts remain unchanged; their history is documented in
+[Alpaca integration](alpaca_historical_integration.md).
 The Massive-specific plan below is retained as the explicit fallback reference.
 
 Planning checkpoint: `37e7e8e4e7829a22784bfd8507e93297b8257848`, branch `main`.

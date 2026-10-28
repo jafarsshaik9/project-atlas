@@ -369,7 +369,7 @@ def test_calendar_manifest_and_default_offline_cli(tmp_path, capsys, monkeypatch
         == 0
     )
     plan = json.loads(output.read_text())
-    assert plan["provider"] == "alpaca-sip"
+    assert plan["provider"] == "alpaca-iex"
     assert plan["request_count_without_retries"] == 1
     assert plan["expected_minute_bars"] == 1950
     assert len(plan["tasks"][0]["checkpoints"]) == 5

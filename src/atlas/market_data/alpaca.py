@@ -1,4 +1,4 @@
-"""Historical SIP bars only. No Alpaca account or execution API exists in this module."""
+"""Explicit historical SIP/IEX bars. No Alpaca account or execution API is available."""
 
 import hashlib
 import json
@@ -86,11 +86,18 @@ def load_credentials():
     return tuple(found[name] for name in names)
 
 
-def instrument(symbol, start, end):
+def feed_for(provider):
+    if provider not in ("alpaca-sip", "alpaca-iex"):
+        raise AtlasError("Unknown Alpaca feed provenance.")
+    return provider.removeprefix("alpaca-")
+
+
+def instrument(symbol, start, end, *, feed="sip"):
+    feed_for("alpaca-" + feed)
     if symbol not in UNIVERSE:
         raise AtlasError("Unsupported Alpaca research symbol.")
     return HistoricalInstrument(
-        instrument_id="ALPACA-SIP-" + symbol,
+        instrument_id="ALPACA-" + feed.upper() + "-" + symbol,
         venue=Venue.NASDAQ,
         trading_currency=Currency.USD,
         quote_unit=QuoteUnit.USD,
@@ -98,7 +105,7 @@ def instrument(symbol, start, end):
         exchange_timezone="America/New_York",
         mappings=(
             SymbolMapping(
-                provider="alpaca-sip",
+                provider="alpaca-" + feed,
                 symbol=symbol,
                 mic=Venue.NASDAQ,
                 currency_code="USD",
@@ -114,8 +121,9 @@ def instrument(symbol, start, end):
 
 
 def parameters(request, symbols, cursor=None):
-    if request.provider != "alpaca-sip" or request.adjustment != Adjustment.RAW:
-        raise AtlasError("Alpaca imports require distinct SIP provenance and raw prices.")
+    feed = feed_for(request.provider)
+    if request.adjustment != Adjustment.RAW:
+        raise AtlasError("Alpaca imports require distinct feed provenance and raw prices.")
     if request.assumed_delay_seconds is not None:
         raise AtlasError("Collection must preserve unknown historical publication times.")
     if request.end - request.start > timedelta(hours=8):
@@ -123,7 +131,7 @@ def parameters(request, symbols, cursor=None):
     result = {
         "symbols": ",".join(sorted(symbols)),
         "timeframe": "1Min",
-        "feed": "sip",
+        "feed": feed,
         "adjustment": "raw",
         "sort": "asc",
         "limit": "10000",
@@ -160,7 +168,7 @@ def project(rows):
 
 def verify_evidence(request, body):
     evidence = body["alpaca_evidence"]
-    symbol = request.instrument.mapping("alpaca-sip", request.start, request.end).symbol
+    symbol = request.instrument.mapping(request.provider, request.start, request.end).symbol
     symbols = evidence["parameters"]["symbols"].split(",")
     if (
         symbol not in symbols
@@ -196,19 +204,35 @@ class AlpacaProvider:
         access_reference="https://docs.alpaca.markets/us/reference/stockbars",
     )
 
+    @classmethod
+    def descriptor_for(cls, feed):
+        feed_for("alpaca-" + feed)
+        if feed == "sip":
+            return cls.descriptor
+        return cls.descriptor.model_copy(
+            update={
+                "provider_id": "alpaca-iex",
+                "coverage": "IEX exchange only; sparse observed bars, not consolidated US coverage",
+                "activation_status": "BASIC_IEX_DOCUMENTED_ACCOUNT_ACCESS_REQUIRES_APPROVED_PILOT",
+            }
+        )
+
     def __init__(
         self,
         *,
         symbols=UNIVERSE,
         quota=None,
-        cache=DEFAULT_CACHE,
+        cache=None,
         allow_network=False,
         credentials=load_credentials,
         transport=None,
         clock=lambda: datetime.now(UTC),
         pilot=None,
         attempts=3,
+        feed="sip",
     ):
+        self.feed = feed
+        self.descriptor = type(self).descriptor_for(feed)
         if not symbols or len(set(symbols)) != len(symbols) or set(symbols) - set(UNIVERSE):
             raise AtlasError("Invalid Alpaca batch universe.")
         if transport is None and not allow_network:
@@ -218,7 +242,14 @@ class AlpacaProvider:
         if not 1 <= attempts <= 3:
             raise AtlasError("Invalid Alpaca attempt bound.")
         self.symbols, self.quota = tuple(sorted(symbols)), quota or AlpacaQuota()
-        self.cache, self.credentials, self.transport = Path(cache).resolve(), credentials, transport
+        default_cache = (
+            DEFAULT_CACHE if feed == "sip" else ROOT / "local/market-data/alpaca-iex-pages.sqlite3"
+        )
+        self.cache, self.credentials, self.transport = (
+            Path(cache or default_cache).resolve(),
+            credentials,
+            transport,
+        )
         self.clock, self.pilot, self.attempts = clock, pilot, attempts
         self.heartbeat = lambda: None
         self.on_event = lambda event: None
@@ -402,7 +433,9 @@ class AlpacaProvider:
             return payload
 
     def fetch_page(self, request, cursor):
-        symbol = request.instrument.mapping("alpaca-sip", request.start, request.end).symbol
+        if request.provider != self.descriptor.provider_id:
+            raise ProviderError("FEED_PROVENANCE_MISMATCH")
+        symbol = request.instrument.mapping(request.provider, request.start, request.end).symbol
         if symbol not in self.symbols or request.end > self.clock() - timedelta(minutes=15):
             raise ProviderError("SYMBOL_OR_HISTORICAL_DELAY_GATE")
         payload = self._batch_page(request, cursor)

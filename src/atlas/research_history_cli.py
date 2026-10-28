@@ -84,6 +84,10 @@ def load_bundle(path):
 
 def main(argv=None):
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "approve-iex":
+        from atlas.alpaca_iex_approval import main as approval_main
+
+        return approval_main(actual[1:])
     if actual and actual[0] == "diagnose":
         from atlas.research_diagnostics import main as diagnostics_main
 
@@ -98,8 +102,16 @@ def main(argv=None):
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("collect", help="Alpaca collection; dry-run unless explicitly approved")
     commands.add_parser("diagnose", help="Read-only historical ORB diagnostics and reporting")
+    commands.add_parser(
+        "approve-iex", help="Interactive explicit IEX execution approval; never makes HTTP requests"
+    )
     plan = commands.add_parser("plan")
-    plan.add_argument("--provider", choices=("alpaca", "massive"), default="alpaca")
+    plan.add_argument(
+        "--provider", choices=("alpaca", "alpaca-iex", "massive"), default="alpaca-iex"
+    )
+    plan.add_argument(
+        "--symbols", help="Explicit comma-separated IEX research subset (e.g. AAPL for a pilot)"
+    )
     plan.add_argument(
         "--as-of", required=True, help="Explicit timezone-aware UTC ISO planning instant"
     )
@@ -119,15 +131,21 @@ def main(argv=None):
         if args.command == "plan":
             from atlas.alpaca_collection import plan_alpaca, write_alpaca_manifest
 
-            planner = plan_alpaca if args.provider == "alpaca" else plan_collection
+            planner = plan_alpaca if args.provider != "massive" else plan_collection
+            extra = {"feed": "iex"} if args.provider == "alpaca-iex" else {}
+            if args.symbols:
+                if args.provider != "alpaca-iex":
+                    raise AtlasError("Symbol subsets are explicit IEX planning only.")
+                extra["symbols"] = tuple(args.symbols.split(","))
             manifest = planner(
                 datetime.fromisoformat(args.as_of),
                 stores=args.store,
                 first=args.first,
                 last=args.last,
                 actions=public_json(args.actions) if args.actions else (),
+                **extra,
             )
-            writer = write_alpaca_manifest if args.provider == "alpaca" else write_manifest
+            writer = write_alpaca_manifest if args.provider != "massive" else write_manifest
             writer(args.output, manifest)
             result = {
                 key: value

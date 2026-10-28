@@ -1,4 +1,4 @@
-"""Daily multi-symbol SIP plans; existing immutable per-symbol historical imports."""
+"""Explicit-feed daily plans using existing immutable per-symbol historical imports."""
 
 import json
 from datetime import date, datetime, timedelta
@@ -12,7 +12,12 @@ from atlas.market_data.service import download
 from atlas.research_collection import ROOT, exclusive_worker, rolling_window, sessions_between
 
 
-def plan_alpaca(as_of, *, first=None, last=None, stores=(), actions=(), symbols=UNIVERSE):
+def plan_alpaca(
+    as_of, *, first=None, last=None, stores=(), actions=(), symbols=UNIVERSE, feed="sip"
+):
+    from atlas.market_data.alpaca import feed_for
+
+    feed_for("alpaca-" + feed)
     earliest, latest = rolling_window(as_of)
     first, last = first or earliest, last or latest
     if not date(2016, 1, 1) <= first <= last <= latest:
@@ -26,10 +31,10 @@ def plan_alpaca(as_of, *, first=None, last=None, stores=(), actions=(), symbols=
     tasks = []
     for session, proof in sessions_between(first, last):
         if session.close > as_of - timedelta(minutes=15):
-            raise AtlasError("Historical SIP Basic delay gate excludes this session.")
+            raise AtlasError("Historical completed-session delay gate excludes this session.")
         request = DownloadRequest(
-            provider="alpaca-sip",
-            instrument=instrument(symbols[0], session.open, session.close),
+            provider="alpaca-" + feed,
+            instrument=instrument(symbols[0], session.open, session.close, feed=feed),
             start=session.open,
             end=session.close,
         )
@@ -44,7 +49,7 @@ def plan_alpaca(as_of, *, first=None, last=None, stores=(), actions=(), symbols=
             * len(symbols),
             "reusable": None,
             "checkpoints": [
-                f"alpaca-sip/{symbol}/{session.local_date}" for symbol in sorted(symbols)
+                f"alpaca-{feed}/{symbol}/{session.local_date}" for symbol in sorted(symbols)
             ],
         }
         task["id"] = digest(task)
@@ -83,6 +88,21 @@ def plan_alpaca(as_of, *, first=None, last=None, stores=(), actions=(), symbols=
         "massive_comparison": {"requests": 5008, "duration_hours": "23-26"},
         "authorization": "DRY_RUN_ONLY; full collection requires separate approval",
     }
+    if feed == "iex":
+        result.update(
+            schema="atlas-alpaca-iex-daily-plan-v1",
+            provider="alpaca-iex",
+            feed="iex",
+            regular_session_slots=bars,
+            coverage_policy=(
+                "OBSERVED_IEX_ONLY; missing minutes are warnings; "
+                "empty sessions quarantine; never fabricate"
+            ),
+            entitlement=(
+                "Basic includes IEX per provider documentation; "
+                "account access unverified until approved pilot"
+            ),
+        )
     result["manifest_id"] = digest(result)
     return result
 
@@ -160,6 +180,7 @@ def write_alpaca_manifest(path, manifest):
         first=date.fromisoformat(manifest["first"]),
         last=date.fromisoformat(manifest["last"]),
         symbols=tuple(manifest["symbols"]),
+        feed=manifest["provider"].removeprefix("alpaca-"),
     )
     if expected != manifest or Path(path).suffix != ".json":
         raise AtlasError("Invalid Alpaca dry-run manifest.")
