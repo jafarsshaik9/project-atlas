@@ -124,15 +124,13 @@ class RiskEngine:
                 except AtlasError:
                     reasons.append("CALENDAR_UNKNOWN")
                 reasons.extend(bar_errors(bars, session, now, instrument.instrument_id))
+            # Evidence is reported OHLC, already validated by MarketBar. The
+            # executable bid/ask grid is checked separately below.
             if any(
-                bar.unit != instrument.quote_unit
-                or bar.adjustment != Adjustment.RAW
-                or any(
-                    not instrument.valid_price(p) for p in (bar.open, bar.high, bar.low, bar.close)
-                )
+                bar.unit != instrument.quote_unit or bar.adjustment != Adjustment.RAW
                 for bar in bars
             ):
-                reasons.append("INVALID_BAR_UNIT_ADJUSTMENT_OR_TICK")
+                reasons.append("INVALID_BAR_UNIT_OR_ADJUSTMENT")
             if any(
                 now - p.mark_time > timedelta(minutes=5) or p.mark_time > now
                 for p in state.positions

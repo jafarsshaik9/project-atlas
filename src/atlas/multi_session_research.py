@@ -385,6 +385,7 @@ def run_multi_session(refs, *, orb=None, allow_artificial=False, progress=None):
             item["net_pnl_gbp"] += fill.realized_pnl_gbp
     configuration = {
         "engine": "atlas-multi-session-v1",
+        "strategy_contract": ORBStrategy.version,
         "sources": source_proofs,
         "configurations": [r[2].config.content() for r in catalog],
         "orb_override": jsonable(orb),

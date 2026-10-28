@@ -45,7 +45,7 @@ class StrategyResult:
 
 
 class ORBStrategy:
-    version = "orb-5m-v1"
+    version = "orb-5m-v2-observed-prices"
 
     def __init__(self, config: ORBConfig | None = None) -> None:
         self.config = config if config is not None else ORBConfig()
@@ -63,11 +63,13 @@ class ORBStrategy:
         if errors:
             return StrategyResult(None, errors)
         ordered = sorted(bars, key=lambda bar: bar.start)
+        # MarketBar validates finite, positive, internally consistent OHLC.
+        # Reported trades (including midpoint executions) need not lie on the
+        # executable order grid. Preserve observations; tick-align order plans.
         if any(
             bar.unit != instrument.quote_unit
             or bar.adjustment != Adjustment.RAW
             or bar.volume < self.config.minimum_bar_volume
-            or any(not instrument.valid_price(p) for p in (bar.open, bar.high, bar.low, bar.close))
             for bar in ordered
         ):
             return StrategyResult(None, ("STRATEGY_DATA_QUALITY",))

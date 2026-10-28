@@ -11,6 +11,7 @@ from atlas.historical_backtest import AvailabilityMode
 from atlas.market_data.contracts import digest
 from atlas.multi_session_research import run_multi_session
 from atlas.research_performance import performance, render_research_html
+from atlas.strategy import ORBStrategy
 from tests.test_multi_session_research import build
 
 
@@ -23,6 +24,7 @@ def test_metrics_html_and_progress_match_actual_ledger(tmp_path):
     refs = build(tmp_path, symbols=("A",))
     events = []
     result = run_multi_session(refs, allow_artificial=True, progress=events.append)
+    assert result["configuration"]["strategy_contract"] == ORBStrategy.version
     assert result == run_multi_session(refs, allow_artificial=True)
     assert len(events) == 3
     metrics = performance(result)
