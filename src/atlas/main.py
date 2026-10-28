@@ -9,6 +9,10 @@ from atlas.config import AtlasError, Settings
 
 def main(argv: list[str] | None = None) -> int:
     actual = sys.argv[1:] if argv is None else argv
+    if actual and actual[0] == "research-history":
+        from atlas.research_history_cli import main as research_history_main
+
+        return research_history_main(actual[1:])
     if actual and actual[0] == "paper-session":
         from atlas.paper_execution.cli import main as paper_session_main
 
@@ -42,6 +46,7 @@ def main(argv: list[str] | None = None) -> int:
             "market-data",
             "paper-data",
             "paper-session",
+            "research-history",
         ),
     )
     parser.add_argument("--scenario", default="orb")
