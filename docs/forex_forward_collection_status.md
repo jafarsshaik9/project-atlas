@@ -1,120 +1,148 @@
 # OANDA forward collection status
 
-29 October 2026. **Decision: BLOCKED — ENTITLEMENT OR COST UNVERIFIED.**
-The user has authorized a specific read-only market-data scope. The mandatory
-pre-request evidence gate did not pass, so no token was loaded, transport
-constructed, request submitted or collector enabled. No strategy/code change was
-necessary to reach this fail-closed decision.
+29 October 2026. **Decision: BLOCKED — ENTITLEMENT/COST.** Expanded user data
+permission is recorded. The remaining decisive issue is the absence of verified
+GBP0 incremental pricing for this existing account/use. No market-data request,
+credential loading, collector configuration or activation occurred.
 
-## Authorization and checkpoint
+## Checkpoint and frozen scope
 
-Started on `main` at `b34db4058794c84d6662ac55943fb5f3e9b8fef6`, matching the
-local `origin/main` checkpoint. The only pre-existing working-tree item was the
-unfinished untracked `src/atlas/forex/contract_readiness.py`; it is unchanged and
-excluded from the status-report commit.
-
-Allowed market request: **HTTPS GET**
-`https://api-fxtrade.oanda.com/v3/instruments/EUR_USD/candles`,
-`granularity=M1`, `price=BA`, live environment, no more than once per completed
-minute, maximum additional cost **GBP0**, existing local credentials only.
-No other instrument, component, host, endpoint, method, redirect, account/order
-query or historical backfill is authorized. Authorization begins **2 November
-2026, Europe/London**, which is 2026-11-02 00:00 UTC on that date.
-
-Clock observed at preflight: **2026-10-29 19:09:54 UTC**. The date gate is closed.
-No future-start scheduler or background process was installed. This is not a
-claim of active or continuously scheduled collection.
-
-Frozen preregistration SHA-256 verified unchanged:
+Started on `main` at `1f8dfeb118e75cffd13cd61aaf00376b2500e6fc`. The unfinished
+untracked `src/atlas/forex/contract_readiness.py` is preserved exactly. No runtime
+source, strategy, cost parameter, prior result or accepted dataset was changed.
+Frozen manifest SHA-256 remains:
 
 `6f84852343fbeb0971bf94ebb7a2c670c3ae60c7ce04212d8830503b2356a4a9`
 
-## Mandatory gate findings
+Current authorized live host: `api-fxtrade.oanda.com`. Only HTTPS GET candle
+requests for EUR_USD and GBP_USD are contemplated; no account/order/position or
+transaction endpoints, other instruments, redirects or historical backfills.
+EUR/USD: M1 `price=MBA`. The user now permits midpoint and GBP/USD conversion
+observations; the earlier instrument/component permission mismatch is resolved.
+Additional cost ceiling remains GBP0. No paid service or upgrade is authorized.
 
-| Gate | Evidence / result |
+Clock checked: **2026-10-29 19:34:41 UTC**. Start is **2026-11-02 00:00
+Europe/London** (00:00 UTC that day), so real collection cannot start now even
+if the other gates pass. The fixed evaluation end remains 2027-05-03 exclusive.
+
+## Existing successful integration: independently inspected
+
+Read-only inspection of the saved Stage B plan and SQLite ledgers established:
+
+| Evidence | Verified local result |
 | --- | --- |
-| Provider entitlement | **Unverified.** Existing discovery/collection shows prior access, not current research/storage/data rights for this forward use. Prior approval artifacts authorize user actions, not provider licensing. |
-| Additional charge | **Unverified.** No reviewed local source establishes GBP0 additional cost for this specific usage/account entitlement. User's GBP0 ceiling is a limit, not evidence of the provider's charging terms. |
-| Credentials | **Not loaded or checked.** Existing secure `atlas.forex.config.load_config` mechanism inspected as source only. Gate failure makes secret access unnecessary. No assertion that the current token is present, valid or absent. |
-| Host/path | Requested live URL matches the repository's live-host mapping and candle route. No live connection was tested. |
-| Strict collector boundary | No activated collector exists. The inherited general read-only transport permits broader approved scopes, three instruments and multiple components; it must not be used unchanged as proof of this new single-endpoint authorization. |
-| Start date | **Not reached.** No real candles may be requested now, even if cost/entitlement were established. |
-| Shadow input compatibility | **Blocked.** Frozen signals use provider midpoint OHLC; price=BA does not supply that component. The frozen cost filter, GBP sizing and P&L also require current GBP/USD observations, outside this authorization. |
+| Environment / instruments | Live; historical EUR_USD, GBP_USD, USD_JPY |
+| Source representation | M1, unsmoothed bid/ask/midpoint OHLC; exact decimal schema |
+| Historical route | `/v3/instruments/{instrument}/candles`, explicit UTC `from`/`to` bounds; no repeat download |
+| Success ledger | 4,388 HTTP200 records, zero unfinished: 4,386 candle pages plus two prior discovery requests |
+| Partition ledger | 2,193 accepted records; prior audited corpus 2,227,822 candles |
+| Authentication | Existing secure local loader; Bearer token attached only after request validation, removed afterward; secrets redacted |
+| Failure controls | GET-only transport, no redirects/proxy environment, explicit 10-second timeouts, maximum three reader attempts, persisted quota/cooldown, 401/403 stop |
 
-The [prior data authorization investigation](forex_forward_data_authorization.md)
-explicitly recorded entitlements and charges as unknown. The
-[historical collection contract](phase6b1_oanda_historical_pilot.md) distinguishes
-user approval from a provider licence. No private-account evidence, credential
-store, broker endpoint or unrelated service was accessed to try to close these
-gaps. Public/token possession claims were not substituted for verified rights.
+These are historical access facts, not a current entitlement or price guarantee.
+No account identifier, authorization record signature or token was printed or
+read to inspect these aggregate records. The generic historical transport also
+allows broader scopes/rates than this pilot and is not a certified narrowed
+forward collector. No historical approval is reused as a new licence.
 
-The authorization mismatch is independent of entitlement: EUR/USD BA could
-eventually support a bounded data-only collector, but cannot evaluate the frozen
-hypothesis by itself. Do not request `MBA`, add GBP/USD, fabricate/stale-fill
-conversion rates, derive substitute midpoint OHLC, or change the experiment
-without a separate explicit decision. No scope expansion occurred.
+## Current public evidence and precise remaining gate
 
-## Actual collection and research status
+Public documentation was inspected without calling broker market/account APIs.
+The [current UK legal hub](https://www.oanda.com/uk-en/legal/) links an
+[April 2026 OANDA Europe Limited API licence](https://legal.oanda.com/?code=api_licence_agreement&language=en).
+Clauses 3/4 describe conditional use permissions; clause 18.6 includes internal
+research/analysis and restricts redistribution. This materially improves the
+public evidence for the intended private research purpose. It does not verify
+this account's accepted agreement or specific current rights.
 
-| Item | Actual status |
+The same licence's clause 18.4 permits charges for use exceeding its authorization;
+it does not provide an affirmative GBP0 schedule for this use. The
+[v20 introduction](https://developer.oanda.com/rest-live-v20/introduction/)
+links API access to an eligible v20 account and licence acceptance. The
+[UK charges page](https://www.oanda.com/uk-en/trading/our-charges/) does not establish
+a zero incremental tariff for these candle requests. Absence of an advertised
+per-call fee is not equivalent to verified GBP0 pricing.
+
+The user's funded-account/API-access confirmation plus historical successes are
+recorded and accepted as access evidence. They do not close the explicit current
+entitlement/cost gate. No assertion is made that OANDA necessarily charges for
+these requests: **the applicable incremental charge remains unverified**. Generic
+third-party claims, Japan-specific free API terms, and the separately priced
+Exchange Rates API cannot establish UK v20 pricing. No new service was selected.
+The old individual candle documentation URL returned 404; existing implementation
+and saved successful request metadata establish the historical route only.
+
+**Needed to unblock:** applicable OANDA terms or nonsecret confirmation that this
+existing account's private internal EUR/USD/GBP/USD v20 candle polling/storage
+falls within its permission and incurs no incremental subscription, data or
+per-request fee. Do not send tokens or account identifiers. No broker probe,
+account query, new licence purchase or support contact was performed.
+
+## Minimum GBP/USD inputs and technical readiness
+
+The frozen filter reads the signal minute's GBP/USD ask close. USD income and
+obligations convert through current ask/bid closes; funding and mark-to-market
+need synchronized observations through the management interval. Thus the
+mathematical minimum is **completed M1 bid/ask close prices, UTC minute timestamp
+and completeness**, synchronized with EUR/USD. Coarser candles, stale conversion,
+mid-only conversion and a tick stream are unnecessary or unsuitable.
+
+The OANDA candle endpoint supplies OHLC per selected side: M1 `price=BA` is the
+smallest suitable component request, retaining its supplied OHLC and provenance;
+no GBP/USD midpoint need be requested for the arithmetic. Signal-time GBP/USD is
+required at 09:00 London, then entry/management conversions only while exposure
+exists. No USD/JPY prices or tick-level collection is needed.
+
+**Compatibility caveat:** the unchanged shared `market.reason` currently requires
+all bid/ask/mid components, including conversion observations. A later minimal
+conversion-only BA eligibility adjustment needs focused review/tests before real
+shadow processing; do not manufacture midpoint OHLC or silently request extra
+components to bypass it. This is separate from the now-resolved user permission
+gap. No compatibility change was implemented because the required cost gate failed.
+
+## Actual operational status
+
+| Item | Status |
 | --- | --- |
-| First actual collection timestamp | None |
-| Latest collected forward candle | None |
-| Real completed forward candles stored | **0** |
-| Missing-minute count | **Not applicable yet:** prospective period has not started; no actual coverage denominator |
-| Duplicate observations | **0 observed**; no real response received |
-| Forward data integrity | NOT EVALUATED; no real observations |
-| Collector process | Not started by this task; no persistent forward process/scheduler configured or verified |
-| Persistence across restarts | Existing synthetic continuity checks pass; **real collector persistence NOT VERIFIED** |
-| Shadow trading | Synthetic-only implementation retained; real-data guard remains closed |
-| P&L, expectancy, profit factor, drawdown, capital utilization | **NOT EVALUATED** |
+| Collector / scheduler | Not configured, enabled or started by this task |
+| Persistent operation across restarts | Not verified for real collection; no OS service/task installed |
+| First actual forward candle / collection timestamp | None |
+| Stored real forward candles | **0** |
+| Missing minutes | Not applicable: prospective window has not begun |
+| Duplicates | **0 observed**; no real response received |
+| Real-data integrity / profitability | **NOT EVALUATED** |
+| Shadow ledger | Existing synthetic-only guard retained; GBP1,000/GBP5 limits unchanged |
+| Credentials | Secure loader inspected as source; actual secrets not loaded or validated |
 
-No prospective observation is backdated. If a later approved activation misses
-the start or subsequent minutes, record that gap; do not backfill or shift the
-fixed 2026-11-02 to 2027-05-03 evaluation window. No simulated fixture is reported
-as market performance. GBP1,000/GBP5 risk rules remain unchanged.
+No backdating, late-start backfill, substitution of old holdouts or synthetic
+fixture performance occurred. Later missed dates/minutes must remain visible;
+do not move the fixed window. No claim of continuous collection is made.
 
-## Technical verification and independent review
+## Acceptance and next action
 
-Existing OANDA read-only and pilot tests run exclusively with synthetic responses
-and invented credentials. They exercise GET/method/host/path/header restrictions,
-redirect refusal, redaction, bounded timeout retries, rate-limit persistence,
-candle precision/BA components, duplicates/gaps, synthetic ledger continuity and
-frozen-hash protection. They do **not** certify an unimplemented strict forward
-collector or a 60-second persisted polling policy. No new tests were added solely
-for a documentation-only blocked preflight.
+Existing deterministic OANDA/pilot tests: **114 passed**, no failures/errors/skips.
+Ruff lint/formatting pass for **154 tracked Python files**; `pip check` passes.
+No new test or collector implementation was necessary for a mandatory gate stop.
+Tests validate existing generic guards and synthetic accounting; they do not
+certify an unimplemented narrowed collector, new BA conversion gate or scheduler.
 
-Results: **114 passed**, no failures/errors/skips, in 13.64 seconds. Ruff lint
-and formatting pass for all **154 tracked Python files**; `pip check` passes.
-The unfinished untracked Phase 6B-6 file is excluded from lint and left untouched.
-Relevant results and dependency checks are recorded in local-only
-`local/verification/oanda-forward-activation/`. No runtime source, manifest,
-credential configuration, approval or historical artifact was modified. The
-preservation inventory matches **5,320 readable protected/prior-evidence files**;
-two previously unreadable legacy Massive reports remain unverified. The original
-5,216 readable source artifacts and the unfinished Phase 6B-6 file are unchanged.
+Preservation matched **5,330 readable protected/prior-evidence files**, including
+the original 5,216 source artifacts. Two legacy Massive reports remain unreadable
+and unverified. The original preregistration and unfinished Phase 6B-6 file are
+unchanged. Local receipts: `local/verification/oanda-forward-unblock/`.
 
-A separate critical pass by the same agent, not external certification, confirmed:
-prior access is not entitlement/cost proof; the date gate is closed; BA-only
-EUR/USD is insufficient for the frozen signal/GBP ledger; and a generic GET-only
-transport does not enforce the new narrower scope or polling limit. The safe
-resolution is to stop before credential/network activation, not weaken a gate.
+Separate critical review by the same agent confirmed the distinction between
+user permission, historical access, public licence scope and verified current
+cost; no unsupported free-access claim was introduced. Only this status report
+is committed. No runtime or infrastructure work is expanded while the gate is open.
 
-## Required next decision
+Next action: obtain the nonsecret applicable entitlement/GBP0 evidence above.
+After that, complete the narrowly scoped request/conversion checks and verify
+persistent scheduling before activation, never before 2 November. Any Windows
+Task Scheduler/service installation would require a separately reviewed exact
+command and user permission; none was attempted or silently installed.
 
-1. Establish applicable OANDA market-data research/storage rights and GBP0
-   incremental charging from appropriate existing terms or nonsecret evidence;
-   a probe request/account query is not authorized as a substitute.
-2. Decide whether to authorize the additional midpoint and GBP/USD market inputs
-   required by the unchanged frozen pilot, or retain EUR/USD BA for data-only
-   collection with shadow evaluation blocked. Neither expansion is inferred.
-3. Only after those gates and the start date: implement/test the exact narrowed
-   request guard, persisted once-per-minute ceiling, bounded failures, forward-only
-   interval and storage; explicitly verify a persistent process before claiming
-   continuous operation. No such process is armed now.
-
-No trades were placed; no order or account endpoints were called; no account
-changes, historical backfills, paid requests or Telegram notifications occurred.
-There were **zero broker API requests and no real credential access**. Only the
-separately permitted private Git backup may use network access. No subsequent
-phase was started.
+**External market-data requests this task: zero.** Public OANDA documentation
+pages were accessed. No broker orders/trades, account changes, historical
+backfills, additional paid services or Telegram notifications occurred. No
+subsequent phase was started.
