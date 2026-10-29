@@ -1,0 +1,198 @@
+{
+  "version": "HYPOTHETICAL_CONTRACT_ARITHMETIC_V1",
+  "review_date": "2026-10-29",
+  "assumptions": {
+    "equity_gbp": "1000",
+    "planned_risk_gbp": "5",
+    "aggregate_planned_risk_gbp": "10",
+    "drawdown_limit_gbp": "100",
+    "prices": "Illustrations EURUSD=1.10, GBPUSD=1.30, USDJPY=150; NOT current market observations",
+    "margin": "IG uses exact 1/30 illustration, not rounded 3.33%; CMC published 3.34%; ticket may require more",
+    "costs": "IG public minimum spreads; CMC deliberately conservative illustrative spreads 0.6/0.9/0.7, not asserted current minima; all add hypothetical 0.5 pip/side slippage.",
+    "stop_definition": "Mid-reference movement plus separately reserved spread/slippage; do not double-charge spread for an actual-entry-relative stop",
+    "gap": "Additional hypothetical 50-point adverse gap; no guaranteed maximum loss",
+    "guarantee": "Conditional arithmetic only; premium/minimum distance/availability require current ticket verification",
+    "authorization": "No leverage enabled, no orders, accounts, broker connections or backtests",
+    "minimum_sizes": "IG published spot table requires current ticket reconfirmation; CMC 0.30 educational example is not a verified current minimum; OANDA CFD unit minimum is not a spread-bet stake."
+  },
+  "illustrative_stop_points": [
+    "5",
+    "15",
+    "20"
+  ],
+  "spread_bets": [
+    {
+      "provider": "IG",
+      "pair": "EUR_USD",
+      "spec_status": "PUBLIC_SPOT_TABLE_RECONFIRM_CURRENT_TICKET",
+      "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+      "inputs": {
+        "stake": "0.5",
+        "price": "1.10",
+        "point": "0.0001",
+        "margin_rate": "0.03333333333333333333333333333333334",
+        "spread_points": "0.6",
+        "slippage_per_side": "0.5",
+        "guaranteed_premium_points": "1.2"
+      }
+    },
+    {
+      "provider": "IG",
+      "pair": "GBP_USD",
+      "spec_status": "PUBLIC_SPOT_TABLE_RECONFIRM_CURRENT_TICKET",
+      "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+      "inputs": {
+        "stake": "1",
+        "price": "1.30",
+        "point": "0.0001",
+        "margin_rate": "0.03333333333333333333333333333333334",
+        "spread_points": "0.9",
+        "slippage_per_side": "0.5",
+        "guaranteed_premium_points": "2"
+      }
+    },
+    {
+      "provider": "IG",
+      "pair": "USD_JPY",
+      "spec_status": "PUBLIC_SPOT_TABLE_RECONFIRM_CURRENT_TICKET",
+      "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+      "inputs": {
+        "stake": "0.5",
+        "price": "150",
+        "point": "0.01",
+        "margin_rate": "0.03333333333333333333333333333333334",
+        "spread_points": "0.7",
+        "slippage_per_side": "0.5",
+        "guaranteed_premium_points": "1.5"
+      }
+    },
+    {
+      "provider": "CMC",
+      "pair": "EUR_USD",
+      "spec_status": "PUBLIC_EDUCATIONAL_EXAMPLE_CURRENT_MINIMUM_UNVERIFIED",
+      "source": "https://www.cmcmarkets.com/en-gb/forex/how-much-do-you-need-to-start-trading-forex",
+      "inputs": {
+        "stake": "0.3",
+        "price": "1.10",
+        "point": "0.0001",
+        "margin_rate": "0.0334",
+        "spread_points": "0.6",
+        "slippage_per_side": "0.5"
+      }
+    },
+    {
+      "provider": "CMC",
+      "pair": "GBP_USD",
+      "spec_status": "PUBLIC_EDUCATIONAL_EXAMPLE_CURRENT_MINIMUM_UNVERIFIED",
+      "source": "https://www.cmcmarkets.com/en-gb/forex/how-much-do-you-need-to-start-trading-forex",
+      "inputs": {
+        "stake": "0.3",
+        "price": "1.30",
+        "point": "0.0001",
+        "margin_rate": "0.0334",
+        "spread_points": "0.9",
+        "slippage_per_side": "0.5"
+      }
+    },
+    {
+      "provider": "CMC",
+      "pair": "USD_JPY",
+      "spec_status": "PUBLIC_EDUCATIONAL_EXAMPLE_CURRENT_MINIMUM_UNVERIFIED",
+      "source": "https://www.cmcmarkets.com/en-gb/forex/how-much-do-you-need-to-start-trading-forex",
+      "inputs": {
+        "stake": "0.3",
+        "price": "150",
+        "point": "0.01",
+        "margin_rate": "0.0334",
+        "spread_points": "0.7",
+        "slippage_per_side": "0.5"
+      }
+    }
+  ],
+  "unleveraged": [
+    {
+      "pair": "EUR_USD",
+      "platform": "OANDA_NATIVE_PUBLIC_FX_CFD_MINIMUM_1_UNIT",
+      "inputs": {
+        "price": "1.10",
+        "quote_per_gbp": "1.30",
+        "pip": "0.0001",
+        "minimum_units": "1",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1"
+      }
+    },
+    {
+      "pair": "GBP_USD",
+      "platform": "OANDA_NATIVE_PUBLIC_FX_CFD_MINIMUM_1_UNIT",
+      "inputs": {
+        "price": "1.30",
+        "quote_per_gbp": "1.30",
+        "pip": "0.0001",
+        "minimum_units": "1",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1"
+      }
+    },
+    {
+      "pair": "USD_JPY",
+      "platform": "OANDA_NATIVE_PUBLIC_FX_CFD_MINIMUM_1_UNIT",
+      "inputs": {
+        "price": "150",
+        "quote_per_gbp": "195",
+        "pip": "0.01",
+        "minimum_units": "1",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1"
+      }
+    },
+    {
+      "pair": "EUR_USD",
+      "platform": "MT4_0_01_STANDARD_LOT_1000_UNITS_ILLUSTRATION",
+      "inputs": {
+        "price": "1.10",
+        "quote_per_gbp": "1.30",
+        "pip": "0.0001",
+        "minimum_units": "1000",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1000"
+      }
+    },
+    {
+      "pair": "GBP_USD",
+      "platform": "MT4_0_01_STANDARD_LOT_1000_UNITS_ILLUSTRATION",
+      "inputs": {
+        "price": "1.30",
+        "quote_per_gbp": "1.30",
+        "pip": "0.0001",
+        "minimum_units": "1000",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1000"
+      }
+    },
+    {
+      "pair": "USD_JPY",
+      "platform": "MT4_0_01_STANDARD_LOT_1000_UNITS_ILLUSTRATION",
+      "inputs": {
+        "price": "150",
+        "quote_per_gbp": "195",
+        "pip": "0.01",
+        "minimum_units": "1000",
+        "stop_pips": "20",
+        "spread_pips": "2",
+        "slip_per_side": "0.5",
+        "unit_step": "1000"
+      }
+    }
+  ]
+}

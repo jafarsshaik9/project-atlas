@@ -1,5 +1,16 @@
 # Project Atlas — Offline Quantitative Research
 
+## Active research scope: Forex and financial spread betting
+
+From Phase 6B-4, active trading research is exclusively Forex and financial
+spread betting. Existing stock code, datasets and reports are preserved as legacy
+infrastructure; their presence below does not authorize new stock research.
+The current recommendation is **REDESIGN RESEARCH**, with no profitable strategy
+established. See the [Phase 6B-4 diagnostics and roadmap](docs/phase6b4_profitability_diagnostics.md)
+and [capital/broker feasibility assessment](docs/phase6b4_instrument_feasibility.md).
+No trading, broker authentication, leverage activation, new historical backtest
+or subsequent phase is authorized by these reports.
+
 ## Phase 3B: deterministic historical backtesting
 
 Atlas can now replay an accepted Phase 3A US-equity dataset through the existing

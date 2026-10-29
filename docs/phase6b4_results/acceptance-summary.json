@@ -1,0 +1,64 @@
+{
+  "version": "PHASE6B4_ACCEPTANCE_V1",
+  "decision": "PASS",
+  "research_recommendation": "REDESIGN_RESEARCH",
+  "starting_commit": "1e132746897af186d420a43ea40706f7895638b0",
+  "scope": "Offline diagnostics and public-documentation feasibility only; Forex and financial spread betting active scope",
+  "diagnostic_checksum": "06b27a1deef81978af78634c11ab9ee3ff6a9893b6624d544b163a3c5d706ff8",
+  "research_database_sha256": "9f978f4563a376432ad07bb693ff2a3e2c9793f371d8a4c932d8b33701dd57eb",
+  "calculation_specification_sha256": "ce68fed53c0f50a92c5c1f8062488d3474a654f1e5f11db84aadf927d0a60edd",
+  "diagnostic_source_hashes": {
+    "scripts\\forex_profitability_diagnostics.py": "e06a155abb7e1f8837e056d82e6ef691e1617de41853b1dcd13271277a875273",
+    "src\\atlas\\forex\\diagnostics.py": "afda0947ae3156c8f48d4a85043a272ba08d42a384077f0065dcb73d83d63f14"
+  },
+  "independent_review_checksum": "2b27ee03818589fc4b8aaeee4abc88adf480855bf33bdefeb20361ab35560179",
+  "validation": {
+    "tests_passed": 1692,
+    "new_tests": 28,
+    "failed": 0,
+    "skipped": 0,
+    "existing_warnings": 653,
+    "wall_seconds": 284.53,
+    "ruff_lint": "PASS",
+    "ruff_format_files": 197,
+    "pip_check": "PASS"
+  },
+  "diagnostics": {
+    "sessions_verified": 105264,
+    "trades_attributed": 58447,
+    "cell_split_rows": 540,
+    "historical_strategy_runs": 0,
+    "same_trade_attribution_passes": 2,
+    "identical_detailed_attribution_and_exits": true,
+    "precision_reconciliation": "50 digit independent aggregate reconciliation within 1e-25 GBP"
+  },
+  "preservation": {
+    "decision": "PASS",
+    "readable_protected_files": 5216,
+    "previously_unreadable_massive_reports": 2,
+    "changed_protected": [],
+    "added_protected": [],
+    "phase6b3_evidence_files_verified": 28,
+    "changed_phase6b3": []
+  },
+  "remaining_product_gates": [
+    "Current FCA entity and detailed permissions lookup",
+    "Exact account/product stake, step and minimum stop distance",
+    "Product-specific GBP settlement, all costs and automation entitlement",
+    "Matched executable price/latency evidence and data rights",
+    "Physical currency inventory or explicit collateralised derivative funding contract",
+    "Fresh preregistered chronological evidence before future strategy claims"
+  ],
+  "unauthorized_actions": {
+    "authenticated_broker_or_api_requests": 0,
+    "trades": 0,
+    "market_history_downloads": 0,
+    "account_changes": 0,
+    "telegram_notifications": 0,
+    "leverage_enabled": false,
+    "overnight_enabled": false
+  },
+  "public_documentation_accessed": true,
+  "phase6b5_started": false,
+  "checksum": "2aa5eb926451067e19885fbc5cdfc79a726f89c2dc8ab074ebd16b691dd2903e"
+}

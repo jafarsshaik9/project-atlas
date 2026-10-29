@@ -1,0 +1,181 @@
+{
+  "version": "PHASE6B4_PUBLIC_SOURCE_REGISTER_V1",
+  "review_date": "2026-10-29",
+  "account_or_api_authentication": false,
+  "sources": [
+    {
+      "id": "FCA_COBS",
+      "url": "https://handbook.fca.org.uk/handbook/cobs22/cobs22s5",
+      "status": "PUBLIC_RULE",
+      "finding": "Major FX margin, account-level close-out and negative-balance protection"
+    },
+    {
+      "id": "FCA_SCOPE",
+      "url": "https://www.fca.org.uk/firms/contract-for-differences",
+      "status": "PUBLIC_RULE",
+      "finding": "Rolling FX and spread bets within retail CFD restrictions"
+    },
+    {
+      "id": "HMRC_CGT_SB",
+      "url": "https://www.gov.uk/hmrc-internal-manuals/capital-gains-manual/cg56105",
+      "status": "PUBLIC_GUIDANCE",
+      "finding": "No chargeable gains or allowable capital losses on financial spread betting"
+    },
+    {
+      "id": "HMRC_INCOME",
+      "url": "https://www.gov.uk/hmrc-internal-manuals/business-income-manual/bim22020",
+      "status": "PUBLIC_GUIDANCE",
+      "finding": "Contract and economic substance matter for taxable trading income"
+    },
+    {
+      "id": "HMRC_COMMERCIAL",
+      "url": "https://www.gov.uk/hmrc-internal-manuals/business-income-manual/bim56900",
+      "status": "PUBLIC_GUIDANCE",
+      "finding": "Commercial hedge/corporate distinctions"
+    },
+    {
+      "id": "HMRC_CFD",
+      "url": "https://www.gov.uk/hmrc-internal-manuals/capital-gains-manual/cg56100",
+      "status": "PUBLIC_GUIDANCE",
+      "finding": "CFD capital gains treatment unless trading income"
+    },
+    {
+      "id": "IG_SPOT",
+      "url": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+      "status": "PUBLIC_TABLE_RECONFIRM_TICKET",
+      "finding": "0.5/1/0.5 GBP minima; averages dated 2021 not current"
+    },
+    {
+      "id": "IG_MIGRATED",
+      "url": "https://www.ig.com/uk/help-and-support/articles/681881-forex-spread-betting-product-details",
+      "status": "PRESENTATION_CAUTION",
+      "finding": "Confusing spot/forward headings; do not silently merge contracts"
+    },
+    {
+      "id": "IG_API",
+      "url": "https://bts.ig.com/uk/trading-platforms/trading-apis/how-to-use-ig-api",
+      "status": "PUBLIC_CAPABILITY_ACCOUNT_ENTITLEMENT_UNVERIFIED",
+      "finding": "Retail API describes spread bets, historical and streaming data; quotas and specific history unverified"
+    },
+    {
+      "id": "IG_ENTITY",
+      "url": "https://www.ig.com/uk/trading-platforms/trading-apis",
+      "status": "PUBLIC_BROKER_DISCLOSURE",
+      "finding": "IG Index for spread bets, IG Markets for CFDs"
+    },
+    {
+      "id": "IG_GUARANTEE",
+      "url": "https://www.ig.com/uk/help-and-support/articles/686687-what-is-a-guaranteed-stop",
+      "status": "PUBLIC_CONDITIONS",
+      "finding": "Triggered premium, separate cash reservation and variable minimum stop distance"
+    },
+    {
+      "id": "IG_FUNDING",
+      "url": "https://www.ig.com/uk/help-and-support/articles/681712-what-is-overnight-funding-how-is-it-charged-and-how-is-it-calculated",
+      "status": "PUBLIC_CONDITIONS",
+      "finding": "Tom-next and administrative fees; not modeled or authorized overnight"
+    },
+    {
+      "id": "IG_CURRENCY",
+      "url": "https://bts.ig.com/uk/help-and-support/accounts-and-statements/my-accounts/how-do-i-change-my-base-currency-and-currency-conversion-setting",
+      "status": "PUBLIC_BROKER_DISCLOSURE",
+      "finding": "GBP default account denomination"
+    },
+    {
+      "id": "IG_COMMISSION",
+      "url": "https://deal.ig.com/content/files/CustomerAgreement_igi_en_GB.pdf",
+      "status": "PUBLIC_AGREEMENT_RECONFIRM_VERSION",
+      "finding": "Spread remuneration without commission; other charges possible"
+    },
+    {
+      "id": "IG_EXECUTION",
+      "url": "https://www.ig.com/uk/about-us/best-execution",
+      "status": "PUBLIC_AGGREGATE_NOT_CALIBRATION",
+      "finding": "Slippage can be positive or negative; not Atlas fill evidence"
+    },
+    {
+      "id": "OANDA_MIN",
+      "url": "https://help.oanda.com/uk/en/faqs/minimum-trade-size.htm",
+      "status": "PUBLIC_CFD_SPEC_NOT_SB_SPEC",
+      "finding": "Native FX CFD minimum one unit; MT4/MT5 0.01 lots"
+    },
+    {
+      "id": "OANDA_ENTITY",
+      "url": "https://www.oanda.com/group/where-we-are/",
+      "status": "PUBLIC_BROKER_DISCLOSURE",
+      "finding": "OANDA Europe Limited FCA FRN 542574"
+    },
+    {
+      "id": "OANDA_SUBACCOUNTS",
+      "url": "https://www.oanda.com/uk-en/trading/standard-account/differences/",
+      "status": "PUBLIC_CAPABILITY",
+      "finding": "SB-enabled v20/v20 MT4; no OANDA One/MT5 SB; account-specific details unresolved"
+    },
+    {
+      "id": "OANDA_API",
+      "url": "https://developer.oanda.com/rest-live-v20/introduction/",
+      "status": "PUBLIC_GENERIC_V20_CAPABILITY",
+      "finding": "Requires v20; historical/streaming access; exact SB contract entitlement unverified"
+    },
+    {
+      "id": "OANDA_SB",
+      "url": "https://www.oanda.com/uk-en/trading/spread-betting/",
+      "status": "PUBLIC_BROKER_DISCLOSURE",
+      "finding": "Commission-free SB and weekday hours; exact minimum stake unknown"
+    },
+    {
+      "id": "OANDA_PRICING",
+      "url": "https://www.oanda.com/uk-en/trading/our-pricing/",
+      "status": "PUBLIC_ADVERTISED_MINIMUM",
+      "finding": "EURUSD 0.6 and USDJPY 1.3 minima; not verified SB average"
+    },
+    {
+      "id": "OANDA_FINANCING",
+      "url": "https://www.oanda.com/uk-en/trading/financing-costs/",
+      "status": "PUBLIC_EXAMPLE_APPLICABILITY_UNVERIFIED",
+      "finding": "Variable fees; financing FX-conversion example includes 0.5 percent markup"
+    },
+    {
+      "id": "OANDA_GSLO",
+      "url": "https://help.oanda.com/uk/en/faqs/guaranteed-stop-loss-orders-gslo.htm",
+      "status": "PUBLIC_PRODUCT_CONDITIONS",
+      "finding": "v20/MT4 guarantee premiums and platform restrictions"
+    },
+    {
+      "id": "CMC_SIZE",
+      "url": "https://www.cmcmarkets.com/en-gb/forex/how-much-do-you-need-to-start-trading-forex",
+      "status": "EDUCATIONAL_NOT_CURRENT_TICKET",
+      "finding": "0.30 GBP example, inconsistent illustrative pip arithmetic; no copied profit calculation"
+    },
+    {
+      "id": "CMC_FAQ",
+      "url": "https://www.cmcmarkets.com/en-gb/support/faqs/spread-betting",
+      "status": "PUBLIC_CAPABILITY_CURRENT_PAIR_MINIMUM_UNKNOWN",
+      "finding": "Minimum instrument-specific; generic 1p is not FX-specific; demo and GSLO terms"
+    },
+    {
+      "id": "CMC_FX",
+      "url": "https://www.cmcmarkets.com/en-gb/forex",
+      "status": "PUBLIC_MIXED_PRODUCT_HEADLINES",
+      "finding": "Advertised 0.5/0.4/0.7 minima and 3.34 percent margin; FX Active is CFD; entity FRN 173730"
+    },
+    {
+      "id": "CMC_API",
+      "url": "https://www.cmcmarkets.com/en-gb/institutional/cmc-markets-api",
+      "status": "INSTITUTIONAL_NOT_RETAIL_SB_PROOF",
+      "finding": "Institutional and partner API; retail SB automation not established"
+    },
+    {
+      "id": "CMC_CHARGES",
+      "url": "https://www.cmcmarkets.com/en-gb/support/faqs/charges",
+      "status": "PUBLIC_CONDITIONS",
+      "finding": "Holding costs, guarantee premium reservation/refund and account charges"
+    },
+    {
+      "id": "FCA_REGISTER_ATTEMPT",
+      "url": "https://register.fca.org.uk/s/search?q=542574&type=Companies",
+      "status": "UNAVAILABLE_LOADING_CSS",
+      "finding": "Current detailed permissions not independently retrieved; future gate"
+    }
+  ]
+}
