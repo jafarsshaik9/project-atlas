@@ -29,19 +29,26 @@ def arithmetic_context() -> Context:
 
 
 class Costs(Contract):
-    version: Literal["FX_CLOSE_COSTS_V1"] = "FX_CLOSE_COSTS_V1"
+    version: Literal["FX_CLOSE_COSTS_V1", "FX_CLOSE_COSTS_V2"] = "FX_CLOSE_COSTS_V1"
     provenance: Identifier
     known_at: datetime
     slippage_pips: Money = Field(ge=0, le=100)
     commission_gbp_per_unit_per_side: Money = Field(ge=0, le=1)
     spread_floor_pips: Money = Field(ge=0, le=100)
     additional_spread_pips: Money = Field(ge=0, le=100)
+    spread_multiplier: Positive = Field(default=Decimal(1), le=3)
     max_entry_spread_pips: Positive = Field(default=Decimal(5), le=100)
 
     @field_validator("known_at")
     @classmethod
     def timestamp(cls, value):
         return utc(value)
+
+    @model_validator(mode="after")
+    def versioned_multiplier(self):
+        if self.version == "FX_CLOSE_COSTS_V1" and self.spread_multiplier != 1:
+            raise ValueError("Spread multiplication requires explicit V2 costs.")
+        return self
 
 
 class Settings(Contract):
@@ -147,6 +154,25 @@ class Frame(Contract):
         return self
 
 
+class EntryRule(Contract):
+    """Predeclared conditional research bracket and sizing, resolved at the actual close fill."""
+
+    version: Literal["DECLARATIVE_ENTRY_BRACKETS_AND_SIZING_V1"] = (
+        "DECLARATIVE_ENTRY_BRACKETS_AND_SIZING_V1"
+    )
+    kind: Literal["ORB", "PERCENT", "REFERENCE"]
+    stop_fraction: Positive = Field(default=Decimal(".0015"), lt=1)
+    target_fraction: Positive = Field(default=Decimal(".00225"), lt=1)
+    reward_multiple: Positive = Field(default=Decimal("1.5"), le=100)
+    frozen_reference: Positive | None = None
+
+    @model_validator(mode="after")
+    def reference_required(self):
+        if self.kind == "REFERENCE" and self.frozen_reference is None:
+            raise ValueError("Frozen signal-time reference required.")
+        return self
+
+
 class Intent(Contract):
     identity: Identifier
     instrument: Literal["EUR_USD", "GBP_USD", "USD_JPY"]
@@ -157,6 +183,7 @@ class Intent(Contract):
     signal_at: datetime
     information_cutoff: datetime
     evidence_start: datetime
+    entry_rule: EntryRule | None = None
 
     @model_validator(mode="after")
     def chronology(self):

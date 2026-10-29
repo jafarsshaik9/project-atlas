@@ -48,7 +48,8 @@ def spread(bar: FxCandle, instrument: FxInstrument) -> Decimal:
 def entry_reason(o: Observation, instrument: FxInstrument, settings: Settings) -> str | None:
     indicative = spread(o.candle, instrument)
     if (
-        max(indicative, settings.costs.spread_floor_pips) + settings.costs.additional_spread_pips
+        max(indicative, settings.costs.spread_floor_pips) * settings.costs.spread_multiplier
+        + settings.costs.additional_spread_pips
         > settings.costs.max_entry_spread_pips
     ):
         return "FX_HIGH_ENTRY_SPREAD"
@@ -70,7 +71,11 @@ def adverse_price(
 
 def quote_stress(bar: FxCandle, instrument: FxInstrument, costs: Costs) -> Decimal:
     observed = spread(bar, instrument)
-    extra = (max(ZERO, costs.spread_floor_pips - observed) + costs.additional_spread_pips) / 2
+    extra = (
+        max(observed, costs.spread_floor_pips) * costs.spread_multiplier
+        - observed
+        + costs.additional_spread_pips
+    ) / 2
     return extra * instrument.pip
 
 

@@ -1,0 +1,48 @@
+{
+  "schema": "atlas-forex-research-design-v1",
+  "experiment": "PHASE6B3_PREDEFINED_INTRADAY_V1",
+  "starting_checkpoint": "ab08e9c12a50a3c6218c3b21a0a26e5f95b6f4b2",
+  "source_plan_hash": "a9962e5fcebe922f084c1218601a57249297ebd18bcc1ccbb8598b9b35ebf406",
+  "source_start": "2024-10-28T00:00:00+00:00",
+  "source_end_exclusive": "2026-10-28T22:50:00+00:00",
+  "pairs": ["EUR_USD", "GBP_USD", "USD_JPY"],
+  "sessions": ["LONDON", "NEW_YORK", "OVERLAP"],
+  "strategies": {
+    "ORB": {"opening_minutes": 15, "breakout": "STRICT_MID_CLOSE", "stop": "OPPOSITE_RANGE_BOUNDARY", "target_risk_multiple": "1.5"},
+    "MOMENTUM": {"lag_minutes": 20, "threshold_fraction": "0.0010", "stop_entry_fraction": "0.0015", "target_entry_fraction": "0.00225"},
+    "MEAN_REVERSION": {"previous_closes": 20, "threshold_fraction": "0.0015", "stop_entry_fraction": "0.0015", "target": "FROZEN_PREVIOUS_20_MID_CLOSE_SMA"},
+    "DIRECTIONAL": {"opening_minutes": 15, "decision": "FIRST_ELIGIBLE_CANDLE_AFTER_RANGE; DOJI_NO_TRADE", "stop_entry_fraction": "0.0015", "target_entry_fraction": "0.00225"}
+  },
+  "no_trade_baseline": "NINE_INDEPENDENT_PAIR_SESSION_COHORTS; GBP1000; ZERO_TRADES_ZERO_PNL",
+  "splits": [
+    {"name": "development", "start": "2024-10-28T00:00:00+00:00", "end": "2026-01-01T00:00:00+00:00"},
+    {"name": "validation", "start": "2026-01-01T00:00:00+00:00", "end": "2026-06-01T00:00:00+00:00"},
+    {"name": "holdout", "start": "2026-06-01T00:00:00+00:00", "end": "2026-10-28T22:50:00+00:00"}
+  ],
+  "costs": {
+    "C0": {"spread_multiplier": "1.0", "slippage_pips": "0.5"},
+    "C1": {"spread_multiplier": "1.5", "slippage_pips": "0.5"},
+    "C2": {"spread_multiplier": "1.0", "slippage_pips": "1.5"},
+    "C3": {"spread_multiplier": "2.0", "slippage_pips": "2.0"},
+    "C4": {"status": "BLOCKED", "reason": "FX_V1_NEXT_CLOSE_TIMING_DOES_NOT_SUPPORT_ADDITIONAL_CANDLE_DELAY"}
+  },
+  "commission_gbp_per_unit_per_side": "0.00005",
+  "commission_provenance": "ASSUMED_CONSERVATIVE_GBP5_PER_100000_BASE_UNITS_PER_SIDE; NOT_VERIFIED_BROKER_FEE",
+  "cost_known_at": "2024-10-27T00:00:00+00:00",
+  "risk": {"initial_gbp": "1000", "per_trade_gbp": "5", "concurrent_gbp": "10", "daily_loss_gbp": "10", "max_positions_per_cell": 1, "max_holding_minutes": 60, "max_modeled_entry_spread_pips": "5", "max_entry_range_pips": "100"},
+  "capital_policy": "INDEPENDENT_CONTINUOUS_GBP1000_LEDGER_PER_CELL_ACROSS_ALL_SPLITS; NO_COMBINING_OVERLAPPING_COHORTS; NO_SPLIT_CAPITAL_RESET",
+  "invalid_capital_policy": "ON_FIRST_UNRESOLVED_POSITION: CELL_PORTFOLIO_PNL_UNAVAILABLE; KEEP_PRIOR_COMPLETE_CASE_TRADES_AND_KNOWN_FEES; SUBSEQUENT_SESSIONS_BLOCKED_UNKNOWN_CAPITAL; NEVER_ASSIGN_ZERO_TO_UNKNOWN_LOSS",
+  "entry_policy": "ONE_ATTEMPT_PER_PAIR_SESSION; NEXT_CLOSE; ENTRY_RELATIVE_BRACKETS_AND_UNITS_RESOLVED_USING_ONLY_CURRENT_FILL_INPUTS; ORDERS_REJECTED_NOT_DEFERRED",
+  "signal_policy": "MIDPOINT_FEATURES_ONLY; CONTIGUOUS_ELIGIBLE_EVIDENCE; MOMENTUM_AND_MEAN_REQUIRE_21_CANDLES; ORB_REQUIRES_ALL_RANGE_TO_SIGNAL_SLOTS; DO_NOT_SKIP_A_QUALIFYING_PATTERN_TO_SEEK_A_LATER_BETTER_FILL",
+  "exclusions": ["PHASE6B2_WEEKEND_AND_HOLIDAY_RULES", "PHASE6B2_ROLLOVER_AND_BOUNDARY_RULES", "NO_FORWARD_FILL", "SIGNAL_WINDOW_EXTREME_RANGE_BLOCKED", "OUTLIERS_DURING_EXPOSURE_RETAIN_ADVERSE_RISK_HANDLING", "NO_FUTURE_SESSION_QUALITY_FILTER", "INCOMPLETE_DECLARED_COVERAGE_BLOCKED"],
+  "execution_contract": "FOREX_M1_CONSERVATIVE_REPLAY_V1; ZERO_ASSUMED_PUBLICATION_DELAY; STOP_FIRST_V1; NO_OVERNIGHT",
+  "required_implementation_extensions": ["DECLARATIVE_ENTRY_BRACKETS_AND_SIZING_V1", "EXPLICIT_SPREAD_MULTIPLIER_COSTS_V2"],
+  "metrics": ["trade_count", "gross_model_pnl_gbp", "total_modeled_costs_gbp", "net_pnl_gbp", "net_return", "win_rate", "average_winner_loser", "expectancy", "profit_factor", "maximum_marked_drawdown", "maximum_consecutive_losses", "mean_holding_minutes", "exposure_minutes", "best_worst_days", "top_five_winners", "invalidated_count_rate", "eligible_excluded_sessions", "signals_rejections_and_reason_codes"],
+  "cost_attribution": "MODEL_BRIDGE: COUNTERFACTUAL_SYMMETRIC_ENDPOINT_SPREAD_REMOVAL_AND_SLIPPAGE_REMOVAL_AT_SAME_RECOGNITION_TIMES; MIDPOINT_GBP_CONVERSION; GROSS_MINUS_TOTAL_MODELED_COSTS_EQUALS_NET; NOT_OBSERVED_INTRABAR_TRANSACTION_COSTS; ALSO_REPORT_PRICE_PNL_BEFORE_COMMISSION",
+  "uncertainty": {"method": "NONOVERLAPPING_CALENDAR_WEEK_CLUSTER_EXPECTANCY; STUDENT_T_ASYMPTOTIC_NORMAL_1.96_INTERVAL_ON_WEEK_CLUSTER_SUM_RESIDUALS; NO_INDEPENDENT_TRADE_ASSUMPTION", "minimum_trades": 30, "minimum_weeks": 20, "caveat": "EXPLORATORY_INTERVAL; RESIDUAL_CROSS_WEEK_DEPENDENCE_AND_180_CELL_MULTIPLICITY_NOT_ELIMINATED"},
+  "classification": {"promising_holdout_trades": 100, "positive_validation_C0": true, "positive_holdout_C0_C1_C2": true, "holdout_C0_profit_factor_gt": "1.10", "holdout_C0_drawdown_fraction_le": "0.10", "invalidated_rate_lt": "0.01", "exceptional_profit_concentration_material_fraction": "0.50", "sufficient_rejection_trades_per_split": 30, "rejected": "NEGATIVE_VALIDATION_AND_HOLDOUT_C0_EXPECTANCY_WITH_SUFFICIENT_TRADES_AND_NO_UNRESOLVED_CAPITAL_PATH", "other": "INCONCLUSIVE; CONTRACT_OR_INTEGRITY_UNAVAILABLE_BLOCKED"},
+  "robustness": ["REPORT_ALL_180_CELLS", "NO_HOLDOUT_WINNER_SELECTION", "C0_VS_C1_C2_C3", "PAIR_AND_SESSION_CONSISTENCY", "SUBTRACT_TOP5_POSITIVE_TRADES_AS_DESCRIPTIVE_CONCENTRATION_CHECK", "FLAG_ALL_KNOWN_RANGE_REVIEW_EXPOSURES; NEVER_DROP_AN_OPEN_POSITION", "REPORT_MISSING_PATH_AND_COMPLETE_CASE_LIMITATIONS", "NO_SHARPE_ON_IRREGULAR_TRADES"],
+  "holdout_policy": "ONE_FROZEN_MATRIX_EVALUATION; NO_REPLAY_FOR_TUNING; REPRODUCE_DEVELOPMENT_SUBSET_ONLY; HOLDOUT_OUTPUT_HASHES_AND_INDEPENDENT_LEDGER_RECONSTRUCTION_FOR_VERIFICATION",
+  "resource_limits": {"max_cells": 180, "max_parallel_processes": 4, "source_buffer": "ONE_UTC_DATE_MAX4320_CANDLES", "minimum_free_disk_bytes": 2000000000, "full_detail": "COMPRESSED_DAILY_AND_TRADE_JSONL; NO_DUPLICATED_CORPUS"},
+  "implementation_defect_policy": "PRESERVE_V1_OUTPUTS; ANY_MATERIAL_POST_HOLDOUT_DEFECT_REQUIRES_NEW_EXPERIMENT_VERSION_AND_HOLDOUT_CONTAMINATION_DISCLOSURE"
+}

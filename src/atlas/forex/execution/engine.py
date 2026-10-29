@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from dataclasses import asdict, dataclass, is_dataclass
 from datetime import datetime, timedelta
 from decimal import ROUND_CEILING, ROUND_FLOOR, Decimal, localcontext
+from functools import lru_cache
 from importlib.metadata import version
 from pathlib import Path
 
@@ -54,7 +55,9 @@ def jsonable(value):
     return value
 
 
+@lru_cache(maxsize=1)
 def implementation_hash() -> str:
+    """Fingerprint loaded implementation; run receipts also verify source files."""
     folder = Path(__file__).parent
     return digest(
         {
@@ -227,6 +230,11 @@ class _Engine:
         if name in self.positions or len(self.positions) >= self.settings.max_positions:
             return self.reject(intent, "FX_POSITION_LIMIT")
         meta, bar, costs = self.instruments[name], o.candle, self.settings.costs
+        if intent.entry_rule is not None:
+            try:
+                intent = self.resolve_entry_rule(intent, available)
+            except AtlasError as exc:
+                return self.reject(intent, str(exc))
         if (
             intent.units < meta.minimum_units
             or intent.units % meta.unit_step
@@ -297,6 +305,80 @@ class _Engine:
             quality=o.quality_id,
             costs=costs,
         )
+
+    def resolve_entry_rule(self, intent, available):
+        """Resolve only at the scheduled close. No future observations or strategy search."""
+        from atlas.domain import floor_step
+
+        rule, meta = intent.entry_rule, self.instruments[intent.instrument]
+        bar, costs = available[intent.instrument].candle, self.settings.costs
+        raw = bar.ask.c if intent.side == "long" else bar.bid.c
+        price, adjustment = adverse_price(raw, intent.side, True, bar, meta, costs)
+        direction = Decimal(1) if intent.side == "long" else Decimal(-1)
+        stop = intent.stop if rule.kind == "ORB" else price * (1 - direction * rule.stop_fraction)
+        target = (
+            price + direction * abs(price - stop) * rule.reward_multiple
+            if rule.kind == "ORB"
+            else rule.frozen_reference
+            if rule.kind == "REFERENCE"
+            else price * (1 + direction * rule.target_fraction)
+        )
+        if not (stop < price < target if intent.side == "long" else target < price < stop):
+            raise AtlasError("FX_ENTRY_RULE_INVALID_BRACKET_AT_FILL")
+        rate = conversion(meta.quote, Decimal(-1), available, at=self.now)
+        exposure, equity = self.mark(available)
+        reserved = max(exposure, sum((p.reserved_gbp for p in self.positions.values()), ZERO))
+        remaining_risk = min(
+            self.settings.risk_per_trade_gbp,
+            self.settings.max_concurrent_risk_gbp
+            - sum((p.planned_risk_gbp for p in self.positions.values()), ZERO),
+        )
+        risk_per = (
+            abs(price - stop) + adjustment
+        ) * rate + 2 * costs.commission_gbp_per_unit_per_side
+        liquidation, _ = adverse_price(
+            bar.bid.c if intent.side == "long" else bar.ask.c, intent.side, False, bar, meta, costs
+        )
+        roundtrip = abs(price - liquidation) * rate + 2 * costs.commission_gbp_per_unit_per_side
+        cash_per = (
+            (bar.ask.c + adjustment) * rate + costs.commission_gbp_per_unit_per_side + roundtrip
+        )
+        funding = min(self.cash, equity, self.settings.max_exposure_gbp) - reserved - 2 * GBP_UNIT
+        if funding <= 0 or remaining_risk <= 2 * GBP_UNIT:
+            raise AtlasError("FX_ENTRY_RULE_NO_UNLEVERAGED_CAPACITY")
+        units = floor_step(
+            min(
+                intent.units,
+                funding / cash_per,
+                (remaining_risk - 2 * GBP_UNIT) / risk_per,
+                meta.maximum_units or intent.units,
+            ),
+            meta.unit_step,
+        )
+        if units < meta.minimum_units:
+            raise AtlasError("FX_ENTRY_RULE_BELOW_MINIMUM_UNITS")
+        if rule.kind == "REFERENCE":
+            projected_quote = (
+                (target - direction * costs.slippage_pips * meta.pip - price) * direction * units
+            )
+            projected = projected_quote * conversion(
+                meta.quote, projected_quote, available, at=self.now
+            )
+            if projected <= 2 * units * costs.commission_gbp_per_unit_per_side:
+                raise AtlasError("FX_REFERENCE_TARGET_NOT_PROFITABLE_AFTER_DECLARED_COSTS")
+        resolved = Intent.model_validate(
+            intent.model_dump()
+            | {"units": units, "stop": stop, "target": target, "entry_rule": None}
+        )
+        self.emit(
+            "ENTRY_RULE_RESOLVED",
+            intent.instrument,
+            intent.identity,
+            rule.version,
+            rule=rule,
+            resolved_intent=resolved,
+        )
+        return resolved
 
     def close(self, name, available, raw, code, ambiguous=False, *, contingent=False):
         p, o = self.positions[name], available[name]

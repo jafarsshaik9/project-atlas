@@ -1,0 +1,707 @@
+{
+  "schema": "phase6b3-summary-v1",
+  "experiment": "PHASE6B3_PREDEFINED_INTRADAY_V1",
+  "planned_active_cells": 180,
+  "cohorts": [
+    {
+      "pair": "EUR_USD",
+      "session": "LONDON",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "LONDON",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "LONDON",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "LONDON",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "NEW_YORK",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "NEW_YORK",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "NEW_YORK",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "NEW_YORK",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "OVERLAP",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "OVERLAP",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "OVERLAP",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "OVERLAP",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "LONDON",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "LONDON",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "LONDON",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "LONDON",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "NEW_YORK",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "NEW_YORK",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "NEW_YORK",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "NEW_YORK",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "OVERLAP",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "OVERLAP",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "OVERLAP",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "OVERLAP",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "LONDON",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "LONDON",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "LONDON",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "LONDON",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "NEW_YORK",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "NEW_YORK",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "NEW_YORK",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "NEW_YORK",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "OVERLAP",
+      "strategy": "ORB",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "OVERLAP",
+      "strategy": "MOMENTUM",
+      "classification": "REJECTED"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "OVERLAP",
+      "strategy": "MEAN_REVERSION",
+      "classification": "INCONCLUSIVE"
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "OVERLAP",
+      "strategy": "DIRECTIONAL",
+      "classification": "REJECTED"
+    }
+  ],
+  "classification_counts": {
+    "REJECTED": 27,
+    "INCONCLUSIVE": 9
+  },
+  "no_trade_baseline": [
+    {
+      "pair": "EUR_USD",
+      "session": "LONDON",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "NEW_YORK",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "EUR_USD",
+      "session": "OVERLAP",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "LONDON",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "NEW_YORK",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "GBP_USD",
+      "session": "OVERLAP",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "LONDON",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "NEW_YORK",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    },
+    {
+      "pair": "USD_JPY",
+      "session": "OVERLAP",
+      "starting_gbp": "1000",
+      "trades": 0,
+      "net_pnl_gbp": "0",
+      "drawdown_gbp": "0",
+      "splits": {
+        "development": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "validation": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        },
+        "holdout": {
+          "trades": 0,
+          "net_pnl_gbp": "0",
+          "drawdown_gbp": "0"
+        }
+      }
+    }
+  ],
+  "multiple_comparisons": "FULL_180_CELL_FAMILY; NO_HOLDOUT_WINNER_SELECTION; EXPLORATORY_ONLY",
+  "design_sha": "b3031e70acb3b1a801dcec2cef1bb394b659ff9333ac7fa4f44c8a79a8b6b499",
+  "source_hash": "72a8e877ee66530344b448cbe9667b74cb017870bb3136abfd6e16bef697f125",
+  "local_full_summary_checksum": "e44e2c9c576d23e5ce821ffb143d6cfbd3b0e4d4062def7a36d9d9a301493e40",
+  "robustness": {
+    "ORB": {
+      "C0": {
+        "holdout_net_gbp_range": [
+          "-39.70191845",
+          "-15.39568904"
+        ],
+        "holdout_trade_count_range": [
+          106,
+          108
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C1": {
+        "holdout_net_gbp_range": [
+          "-41.78091066",
+          "-18.25096785"
+        ],
+        "holdout_trade_count_range": [
+          100,
+          108
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C2": {
+        "holdout_net_gbp_range": [
+          "-50.04261305",
+          "-24.40168017"
+        ],
+        "holdout_trade_count_range": [
+          106,
+          108
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C3": {
+        "holdout_net_gbp_range": [
+          "-61.94564080",
+          "-38.54090887"
+        ],
+        "holdout_trade_count_range": [
+          96,
+          108
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      }
+    },
+    "MOMENTUM": {
+      "C0": {
+        "holdout_net_gbp_range": [
+          "-31.74199737",
+          "-13.83269192"
+        ],
+        "holdout_trade_count_range": [
+          64,
+          96
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C1": {
+        "holdout_net_gbp_range": [
+          "-36.85673754",
+          "-14.51300944"
+        ],
+        "holdout_trade_count_range": [
+          64,
+          96
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C2": {
+        "holdout_net_gbp_range": [
+          "-40.85201383",
+          "-17.68962739"
+        ],
+        "holdout_trade_count_range": [
+          64,
+          96
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C3": {
+        "holdout_net_gbp_range": [
+          "-55.94112504",
+          "-22.21831440"
+        ],
+        "holdout_trade_count_range": [
+          64,
+          96
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      }
+    },
+    "MEAN_REVERSION": {
+      "C0": {
+        "holdout_net_gbp_range": [
+          "-9.38806337",
+          "-3.01077406"
+        ],
+        "holdout_trade_count_range": [
+          12,
+          29
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 0
+      },
+      "C1": {
+        "holdout_net_gbp_range": [
+          "-10.03902937",
+          "-0.75009624"
+        ],
+        "holdout_trade_count_range": [
+          11,
+          28
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 0
+      },
+      "C2": {
+        "holdout_net_gbp_range": [
+          "-14.03094146",
+          "-4.37331203"
+        ],
+        "holdout_trade_count_range": [
+          12,
+          29
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 0
+      },
+      "C3": {
+        "holdout_net_gbp_range": [
+          "-16.71147237",
+          "-4.48184567"
+        ],
+        "holdout_trade_count_range": [
+          10,
+          26
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 0
+      }
+    },
+    "DIRECTIONAL": {
+      "C0": {
+        "holdout_net_gbp_range": [
+          "-31.14599346",
+          "-23.38639304"
+        ],
+        "holdout_trade_count_range": [
+          97,
+          103
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C1": {
+        "holdout_net_gbp_range": [
+          "-35.85568762",
+          "-25.34479237"
+        ],
+        "holdout_trade_count_range": [
+          97,
+          103
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C2": {
+        "holdout_net_gbp_range": [
+          "-43.44781600",
+          "-34.60255136"
+        ],
+        "holdout_trade_count_range": [
+          97,
+          103
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      },
+      "C3": {
+        "holdout_net_gbp_range": [
+          "-56.14964946",
+          "-42.94992965"
+        ],
+        "holdout_trade_count_range": [
+          97,
+          103
+        ],
+        "holdout_all_negative": true,
+        "holdout_invalidations": 0,
+        "holdout_extreme_exposed_trades": 0,
+        "holdout_uncertainty_available": 9
+      }
+    }
+  },
+  "runtime": {
+    "seconds": 1712.9,
+    "utc_dates": 731,
+    "peak_single_process_bytes": 108421120,
+    "workers": 4,
+    "database_bytes": 321355776
+  },
+  "status_counts": {
+    "EVALUATED": 144,
+    "BLOCKED": 36
+  },
+  "invalidated_positions": 0,
+  "unresolved_positions": 0,
+  "complete_trades_across_independent_cells": 58447,
+  "independent_cohorts_not_a_portfolio": true
+}
