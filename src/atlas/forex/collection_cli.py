@@ -56,7 +56,12 @@ def pilot_evidence(plan, path):
     ):
         if pilot[key] != plan[key]:
             raise AtlasError("Stage B changed the Stage A collection contract.")
-    result = report(pilot)
+    try:
+        result = report(pilot)
+    except AtlasError as exc:
+        if str(exc) not in ("FOREX_STORE_NOT_FOUND", "FOREX_COLLECTION_LEDGER_NOT_FOUND"):
+            raise
+        raise AtlasError("Stage A is incomplete; Stage B blocked.") from None
     if result["status"] != "COMPLETE_REVIEW_REQUIRED":
         raise AtlasError("Stage A is incomplete or quarantined; Stage B blocked.")
     return result

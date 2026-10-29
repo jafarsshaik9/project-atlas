@@ -297,11 +297,17 @@ def collection_permit(config, plan, record, *, now, pilot_report=None):
 
 
 class CollectionLedger:
-    def __init__(self, output):
+    def __init__(self, output, *, read_only=False):
         self.root = Path(output)
-        self.root.mkdir(parents=True, exist_ok=True)
-        self.store = ForexStore(self.root / "historical.sqlite3")
+        self.read_only = read_only
+        if not read_only:
+            self.root.mkdir(parents=True, exist_ok=True)
+        self.store = ForexStore(self.root / "historical.sqlite3", read_only=read_only)
         self.path = self.root / "collection.sqlite3"
+        if read_only:
+            if not self.path.is_file():
+                raise AtlasError("FOREX_COLLECTION_LEDGER_NOT_FOUND")
+            return
         with self.connect() as db:
             names = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
             if names and names != {"partitions"}:
@@ -317,7 +323,11 @@ class CollectionLedger:
 
     @contextmanager
     def connect(self):
-        db = sqlite3.connect(self.path, timeout=1)
+        db = sqlite3.connect(
+            self.path.resolve().as_uri() + "?mode=ro" if self.read_only else self.path,
+            uri=self.read_only,
+            timeout=1,
+        )
         try:
             db.execute("PRAGMA synchronous=FULL")
             with db:
@@ -490,7 +500,7 @@ def run_collection(
 
 def report(plan):
     validate_plan(plan)
-    ledger = CollectionLedger(plan["output"])
+    ledger = CollectionLedger(plan["output"], read_only=True)
     counts, warning_counts, missing_counts, hourly, dataset_proofs = {}, {}, {}, {}, []
     previous_closes, boundary_discontinuities = {}, []
     bars = 0

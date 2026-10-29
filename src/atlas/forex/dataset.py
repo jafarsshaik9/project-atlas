@@ -14,7 +14,7 @@ from atlas.market_data.contracts import canonical, digest
 
 def partitions(plan):
     validate_plan(plan)
-    ledger = CollectionLedger(plan["output"])
+    ledger = CollectionLedger(plan["output"], read_only=True)
     for row in plan["partitions"]:
         item, manifest, bars = ledger.verified(row)
         yield item["dataset"], manifest, item["quality"], bars

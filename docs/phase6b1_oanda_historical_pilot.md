@@ -1,5 +1,9 @@
 # Phase 6B-1 — OANDA historical collection readiness
 
+Subsequent collection and audit evidence is documented in
+[Phase 6B-1C](phase6b1c_forex_data_quality_audit.md). The preparation-time status
+below is retained as historical context, not the current collection status.
+
 Implementation date: 28 October 2026. This phase prepares collection; **neither
 authenticated stage has run**. No Forex strategy or performance results are produced.
 Existing stock datasets, paper portfolios and Phase 5C/5D research remain separate.

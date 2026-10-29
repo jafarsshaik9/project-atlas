@@ -20,8 +20,13 @@ def windows(plan):
 
 
 class ForexStore:
-    def __init__(self, path):
+    def __init__(self, path, *, read_only=False):
         self.path = Path(path)
+        self.read_only = read_only
+        if read_only:
+            if not self.path.is_file():
+                raise AtlasError("FOREX_STORE_NOT_FOUND")
+            return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.connect() as db:
             names = {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
@@ -40,7 +45,11 @@ class ForexStore:
 
     @contextmanager
     def connect(self):
-        db = sqlite3.connect(self.path, timeout=1)
+        db = sqlite3.connect(
+            self.path.resolve().as_uri() + "?mode=ro" if self.read_only else self.path,
+            uri=self.read_only,
+            timeout=1,
+        )
         try:
             db.execute("PRAGMA synchronous=FULL")
             with db:
