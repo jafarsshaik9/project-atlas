@@ -5,11 +5,18 @@
 From Phase 6B-4, active trading research is exclusively Forex and financial
 spread betting. Existing stock code, datasets and reports are preserved as legacy
 infrastructure; their presence below does not authorize new stock research.
-The current recommendation is **REDESIGN RESEARCH**, with no profitable strategy
+Phase 6B-4 recommended **REDESIGN RESEARCH**, with no profitable strategy
 established. See the [Phase 6B-4 diagnostics and roadmap](docs/phase6b4_profitability_diagnostics.md)
 and [capital/broker feasibility assessment](docs/phase6b4_instrument_feasibility.md).
 No trading, broker authentication, leverage activation, new historical backtest
 or subsequent phase is authorized by these reports.
+
+Phase 6B-5 adds an artificial-only contract and capital-feasibility model. The
+current recommendation is **REVISE CONTRACT MODEL**: complete verified product
+specifications before further strategy evaluation. Read the
+[broker matrix](docs/phase6b5_broker_contract_matrix.md),
+[capital comparison](docs/phase6b5_capital_efficiency.md) and
+[acceptance](docs/phase6b5_acceptance.md). Phase 6B-6 has not started.
 
 ## Phase 3B: deterministic historical backtesting
 

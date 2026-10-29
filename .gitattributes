@@ -1,2 +1,3 @@
 examples/forex-research-phase6b3-v1.json -text
 examples/forex-feasibility-phase6b4.json -text whitespace=cr-at-eol
+examples/forex-capital-phase6b5.json -text

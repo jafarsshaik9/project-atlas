@@ -1,0 +1,9 @@
+{
+  "result_checksum": "47a12fa169fa89ca15102c09b7aad779bfd90a6298f8654e7ad67ea786a4af13",
+  "reproduction_identical": true,
+  "fixture_sha256": "b0cbeea29d312535ca1d421420488e414586ee8d3afb3e566159120743e5d12f",
+  "source_sha256": {
+    "scripts\\forex_capital_feasibility.py": "714d044384517b41be8f400a90837827efe8a3f26cc31b25911dca0ee447a648",
+    "src\\atlas\\forex\\feasibility.py": "8f665199c5dfae9444130abf2013fd6c5aa5885cc036295eaa7e8fa99b4a2998"
+  }
+}

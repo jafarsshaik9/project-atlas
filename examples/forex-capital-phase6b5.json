@@ -1,0 +1,1920 @@
+{
+  "version": "PHASE6B5_ARTIFICIAL_FUNDING_FIXTURES_V1",
+  "price_origin": "All reference prices, costs, gaps and FX rates are artificial; no history or account connection",
+  "initial_capital_gbp": "1000",
+  "trade_risk_gbp": "5",
+  "aggregate_risk_gbp": "10",
+  "policies": [
+    "FULL_NOTIONAL",
+    "MARGIN_ONLY",
+    "MARGIN_STRESS",
+    "RISK_FUNDED"
+  ],
+  "position_limits": [
+    1,
+    3
+  ],
+  "contracts": [
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "ROLLING_FX_CFD",
+      "pair": "EUR_USD",
+      "quantity_kind": "BASE_UNITS",
+      "minimum_quantity": "1",
+      "quantity_step": "1",
+      "units_per_quantity": "1",
+      "point_increment": ".0001",
+      "margin_rate": ".034",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": ".00005",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "UNITS_EUR",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "units_per_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "ROLLING_FX_CFD",
+      "pair": "GBP_USD",
+      "quantity_kind": "LOTS",
+      "minimum_quantity": ".01",
+      "quantity_step": ".01",
+      "units_per_quantity": "100000",
+      "point_increment": ".0001",
+      "margin_rate": ".034",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": "5",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "LOTS_GBP",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "units_per_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "ROLLING_FX_CFD",
+      "pair": "USD_JPY",
+      "quantity_kind": "BASE_UNITS",
+      "minimum_quantity": "1",
+      "quantity_step": "1",
+      "units_per_quantity": "1",
+      "point_increment": ".01",
+      "margin_rate": ".034",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": ".00005",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "UNITS_JPY",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "units_per_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "FX_SPREAD_BET",
+      "pair": "EUR_USD",
+      "quantity_kind": "GBP_PER_POINT",
+      "minimum_quantity": ".5",
+      "quantity_step": ".1",
+      "units_per_quantity": null,
+      "point_increment": ".0001",
+      "margin_rate": ".034",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": "0",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "STAKE_EUR",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "FX_SPREAD_BET",
+      "pair": "GBP_USD",
+      "quantity_kind": "GBP_PER_POINT",
+      "minimum_quantity": "1",
+      "quantity_step": ".1",
+      "units_per_quantity": null,
+      "point_increment": ".0001",
+      "margin_rate": ".034",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": "0",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "STAKE_GBP",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "ARTIFICIAL",
+      "provider": "ARTIFICIAL_ONLY",
+      "account_type": "SYNTHETIC_GBP_RETAIL",
+      "product": "DELIVERABLE_SPOT",
+      "pair": "EUR_USD",
+      "quantity_kind": "BASE_UNITS",
+      "minimum_quantity": "1",
+      "quantity_step": "1",
+      "units_per_quantity": "1",
+      "point_increment": ".0001",
+      "margin_rate": null,
+      "maximum_retail_leverage": null,
+      "minimum_stop_points": "1",
+      "commission_per_quantity_side": ".00005",
+      "minimum_commission_side": "0",
+      "commission_currency": "GBP",
+      "conversion_markup": "0",
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": "3",
+      "adverse_annual_funding_rate": ".05",
+      "funding_day_basis": 365,
+      "identity": "DELIVERABLE",
+      "evidence": [
+        {
+          "field": "origin",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "provider",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "account_type",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "product",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "pair",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_kind",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "quantity_step",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "units_per_quantity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "commission_currency",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "long_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "short_allowed",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_premium_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "guarantee_minimum_points",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "adverse_annual_funding_rate",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "funding_day_basis",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "identity",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "automation_terms",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        },
+        {
+          "field": "data_licence",
+          "status": "VERIFIED_ARTIFICIAL",
+          "source": "artificial://phase6b5/contracts-v1",
+          "scope": "Artificial values only, not broker terms"
+        }
+      ]
+    },
+    {
+      "origin": "PUBLIC_DOCUMENTATION",
+      "provider": "IG",
+      "account_type": "UK_RETAIL_SPOT_SPREAD_BET_PUBLIC_TABLE",
+      "product": "FX_SPREAD_BET",
+      "pair": "EUR_USD",
+      "quantity_kind": "GBP_PER_POINT",
+      "minimum_quantity": ".5",
+      "quantity_step": null,
+      "units_per_quantity": null,
+      "point_increment": ".0001",
+      "margin_rate": ".0333",
+      "maximum_retail_leverage": "30",
+      "minimum_stop_points": null,
+      "commission_per_quantity_side": null,
+      "minimum_commission_side": null,
+      "commission_currency": null,
+      "conversion_markup": null,
+      "long_allowed": true,
+      "short_allowed": true,
+      "guarantee_available": true,
+      "guarantee_premium_points": "1.2",
+      "guarantee_minimum_points": null,
+      "adverse_annual_funding_rate": null,
+      "funding_day_basis": null,
+      "identity": "IG_PUBLIC_PARTIAL_EUR_SB",
+      "evidence": [
+        {
+          "field": "minimum_quantity",
+          "status": "VERIFIED_PUBLIC",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "quantity_step",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "point_increment",
+          "status": "VERIFIED_PUBLIC",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "minimum_stop_points",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "commission_per_quantity_side",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "minimum_commission_side",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "commission_currency",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "conversion_markup",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "long_allowed",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "short_allowed",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "guarantee_available",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "uk_retail_eligibility",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "specific_product_api",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "automation_terms",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "data_licence",
+          "status": "UNRESOLVED",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "margin_rate",
+          "status": "VERIFIED_PUBLIC",
+          "source": "https://bts.ig.com/uk/help-and-support/spread-betting-and-cfds/products-markets-and-trading-hours/what-are-igs-forex-spread-bet-product-details",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        },
+        {
+          "field": "maximum_retail_leverage",
+          "status": "VERIFIED_PUBLIC",
+          "source": "https://www.fca.org.uk/firms/contract-for-differences",
+          "scope": "Published table/rule only; current executable product not confirmed"
+        }
+      ]
+    }
+  ],
+  "books": [
+    {
+      "name": "unit_reference",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "unit_tight_stop",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "5",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "unit_wide_stop",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "100",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "small_gap",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "2",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "large_gap_short",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "20000",
+            "stressed_spread_points": "5",
+            "side": "short",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "spread_widening",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "20",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "slippage",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": "2",
+            "exit_slippage_points": "3",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "risk_sized_single",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "100000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "risk_sized_multiple",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "100000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        },
+        {
+          "contract": "LOTS_GBP",
+          "scenario": {
+            "quantity": "1",
+            "reference_price": "1.3",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "B"
+          }
+        },
+        {
+          "contract": "UNITS_JPY",
+          "scenario": {
+            "quantity": "100000",
+            "reference_price": "150",
+            "quote_per_gbp_bid": "194.972001",
+            "quote_per_gbp_ask": "195.028001",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "insufficient_capital",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "100000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "1",
+            "spread_points": "0",
+            "entry_slippage_points": "0",
+            "exit_slippage_points": "0",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "0",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "minimum_violation",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".1",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "step_violation",
+      "requests": [
+        {
+          "contract": "LOTS_GBP",
+          "scenario": {
+            "quantity": ".015",
+            "reference_price": "1.3",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "lots_gbp",
+      "requests": [
+        {
+          "contract": "LOTS_GBP",
+          "scenario": {
+            "quantity": ".01",
+            "reference_price": "1.3",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "jpy_conversion",
+      "requests": [
+        {
+          "contract": "UNITS_JPY",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "150",
+            "quote_per_gbp_bid": "187.5",
+            "quote_per_gbp_ask": "187.65",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "guarantee_reserve",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "5",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "guaranteed": true,
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "guarantee_minimum_violation",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "2",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "guaranteed": true,
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stake_20_points",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stake_tight_single",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "5",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "stake_tight_multiple",
+      "requests": [
+        {
+          "contract": "STAKE_EUR",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "5",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        },
+        {
+          "contract": "STAKE_GBP",
+          "scenario": {
+            "quantity": "1",
+            "reference_price": "1.3",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "3",
+            "spread_points": ".9",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "B"
+          }
+        },
+        {
+          "contract": "UNITS_JPY",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "150",
+            "quote_per_gbp_bid": "194.972001",
+            "quote_per_gbp_ask": "195.028001",
+            "stop_points": "5",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "C"
+          }
+        }
+      ]
+    },
+    {
+      "name": "gbp_stake_minimum",
+      "requests": [
+        {
+          "contract": "STAKE_GBP",
+          "scenario": {
+            "quantity": "1",
+            "reference_price": "1.3",
+            "quote_per_gbp_bid": "1.2999",
+            "quote_per_gbp_ask": "1.3001",
+            "stop_points": "5",
+            "spread_points": ".9",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "overnight_cost_diagnostic",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "overnight_days": 3,
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "deliverable_not_supported",
+      "requests": [
+        {
+          "contract": "DELIVERABLE",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "side": "short",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "public_missing_contract",
+      "requests": [
+        {
+          "contract": "IG_PUBLIC_PARTIAL_EUR_SB",
+          "scenario": {
+            "quantity": ".5",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": ".6",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A"
+          }
+        }
+      ]
+    },
+    {
+      "name": "margin_rate_increase",
+      "requests": [
+        {
+          "contract": "UNITS_EUR",
+          "scenario": {
+            "quantity": "1000",
+            "reference_price": "1.10",
+            "quote_per_gbp_bid": "1.25",
+            "quote_per_gbp_ask": "1.2502",
+            "stop_points": "20",
+            "spread_points": "2",
+            "entry_slippage_points": ".5",
+            "exit_slippage_points": ".5",
+            "additional_gap_points": "50",
+            "stressed_spread_points": "5",
+            "identity": "A",
+            "stressed_margin_rate": ".1"
+          }
+        }
+      ]
+    }
+  ]
+}
